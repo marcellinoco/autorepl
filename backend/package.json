@@ -4,9 +4,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "start": "bun src/index.ts",
-    "prestart": "bun prisma:migrate",
-    "postinstall": "bun prisma:generate",
+    "start": "bun run src/index.ts",
+    "prestart": "bun run prisma:migrate",
+    "postinstall": "bun run prisma:generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate"
   },
