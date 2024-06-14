@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, Suspense } from "react";
 import ChatsHistoryList from "./history/chats-history-list";
 import { Chat, History, User } from "@/models/model";
 import { getChatsDetails } from "@/app/action";
@@ -13,7 +13,7 @@ interface ChatsProps {
   histories: History[];
 }
 
-const Chats: FC<ChatsProps> = ({ histories }) => {
+const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
   const [curHistory, setCurHistory] = useState<History[] | null>(histories);
   const [activeUser, setActiveUser] = useState<User | null>(null);
   const [chats, setChats] = useState<Chat[] | null>([]);
@@ -152,6 +152,12 @@ const Chats: FC<ChatsProps> = ({ histories }) => {
     </>
   );
 };
+
+const Chats: FC<ChatsProps> = (props) => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ChatsComponent {...props} />
+  </Suspense>
+);
 
 Chats.displayName = "Chats";
 export default Chats;
