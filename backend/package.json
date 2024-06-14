@@ -11,7 +11,8 @@
     "@prisma/client": "5.15.0",
     "elysia": "latest",
     "elysia-session": "^0.0.5",
-    "googleapis": "^140.0.0"
+    "googleapis": "^140.0.0",
+    "logestic": "^1.2.0"
   },
   "devDependencies": {
     "bun-types": "latest",

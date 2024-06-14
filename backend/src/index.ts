@@ -4,6 +4,7 @@ import { sessionPlugin } from "elysia-session";
 import { MemoryStore } from "elysia-session/stores/memory";
 import { PrismaClient } from "@prisma/client";
 import { google } from "googleapis";
+import { Logestic } from 'logestic';
 
 const db = new PrismaClient();
 const oauth2Scopes = [
@@ -17,6 +18,7 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 const app = new Elysia()
+  .use(Logestic.preset('fancy'))
   .use(swagger())
   .use(
     sessionPlugin({
