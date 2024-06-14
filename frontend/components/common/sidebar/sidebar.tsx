@@ -27,7 +27,7 @@ const Sidebar: FC = () => {
           className="text-xl font-bold"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
-          {isCollapsed ? "☰" : "✕"}
+          {isCollapsed ? "☰" : "<"}
         </button>
       </div>
       <div className="shrink-0 bg-border h-[1px] w-full"></div>
