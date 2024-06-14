@@ -2,7 +2,7 @@
 
 import { logout } from "@/app/auth/action";
 import useAuthStore from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FC, useState } from "react";
 
 const Sidebar: FC = () => {
@@ -20,6 +20,11 @@ const Sidebar: FC = () => {
     setSelectedStatus(status);
     console.log(`Selected Status: ${status}`);
   };
+
+  // If the path includes "/auth", return an empty fragment
+  if (pathname.includes("/auth")) {
+    return <></>;
+  }
 
   return (
     <div
