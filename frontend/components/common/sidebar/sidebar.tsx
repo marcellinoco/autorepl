@@ -3,26 +3,47 @@
 import { logout } from "@/app/auth/action";
 import useAuthStore from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 const Sidebar: FC = () => {
   const { user, clear } = useAuthStore();
   const router = useRouter();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="overflow-hidden basis-0 grow-[20] shrink h-screen">
+    <div
+      className={`overflow-hidden h-screen transition-all duration-300 ${
+        isCollapsed ? "w-16" : "w-64"
+      }`}
+    >
       <div className="h-[52px] flex items-center px-5">
-        <h1 className="text-xl font-bold">ChitChat</h1>
+        <button
+          className="text-xl font-bold"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
+          {isCollapsed ? "☰" : "✕"}
+        </button>
+        {!isCollapsed && <h1 className="ml-2 text-xl font-bold">Autoreplai</h1>}
       </div>
       <div className="shrink-0 bg-border h-[1px] w-full"></div>
-      <div className="group flex flex-col justify-center pt-4 px-[20px] data-[collapsed=true]:py-2">
+      <div
+        className={`group flex flex-col justify-center pt-4 px-[20px] ${
+          isCollapsed ? "hidden" : ""
+        }`}
+      >
         <div className="text-base font-bold line-clamp-1">{user?.name}</div>
         <div className="text-xs overflow-truncate line-clamp-1">
           {user?.email}
         </div>
       </div>
-      <div className="group flex flex-col gap-4 py-4 data-[collapsed=true]:py-2">
-        <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+      <div
+        className={`group flex flex-col gap-4 py-4 ${
+          isCollapsed ? "items-center" : "px-[20px]"
+        }`}
+      >
+        <nav
+          className={`grid gap-1 ${isCollapsed ? "justify-center" : "px-2"}`}
+        >
           <a
             className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
             href="/"
@@ -42,7 +63,7 @@ const Sidebar: FC = () => {
               <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
               <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
             </svg>
-            Inbox
+            {!isCollapsed && "Inbox"}
           </a>
           <a
             className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
@@ -64,7 +85,7 @@ const Sidebar: FC = () => {
               <circle cx="10" cy="8" r="5"></circle>
               <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path>
             </svg>
-            Social
+            {!isCollapsed && "Social"}
           </a>
           <a
             className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
@@ -88,7 +109,7 @@ const Sidebar: FC = () => {
                 clipRule="evenodd"
               ></path>
             </svg>
-            Logout
+            {!isCollapsed && "Logout"}
           </a>
         </nav>
       </div>
