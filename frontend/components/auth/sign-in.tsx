@@ -54,6 +54,7 @@ const SignIn: FC = () => {
   const signInWithGoogleHandler = useGoogleLogin({
     onSuccess: async ({ access_token: googleToken }) => {
       try {
+        console.log(googleToken)
         const { access_token, user } = await google(googleToken);
         successfullyLoginHandler(user, access_token);
       } catch (err: any) {}
