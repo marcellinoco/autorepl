@@ -10,7 +10,6 @@ RUN bun install --production
 COPY src src
 COPY prisma prisma
 COPY tsconfig.json .
-# COPY public public
 
 RUN bunx prisma generate
 
