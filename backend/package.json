@@ -1,0 +1,18 @@
+{
+  "name": "elysia",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/swagger": "^1.0.5",
+    "elysia": "latest",
+    "elysia-session": "^0.0.5",
+    "googleapis": "^140.0.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
