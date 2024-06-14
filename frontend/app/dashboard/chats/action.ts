@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import {
   getHistory as mockGetHistory,
   getChatsDetails as mockGetChatsDetails,
-} from "./mocks/mockFunction";
+} from "../../mocks/mockFunction";
 
 export async function getHistory(): Promise<{
   histories: History[];

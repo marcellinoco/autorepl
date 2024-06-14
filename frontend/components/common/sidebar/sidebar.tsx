@@ -7,7 +7,6 @@ import { FC, useState } from "react";
 
 const Sidebar: FC = () => {
   const { user, clear } = useAuthStore();
-  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
