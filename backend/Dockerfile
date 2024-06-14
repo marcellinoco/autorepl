@@ -2,13 +2,7 @@ FROM imbios/bun-node
 
 WORKDIR /app
 
-COPY package.json .
-COPY bun.lockb .
-
-COPY src src
-COPY prisma prisma
-COPY tsconfig.json .
-
+COPY . .
 RUN bun install --production
 
 ENV NODE_ENV production
