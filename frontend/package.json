@@ -28,7 +28,8 @@
     "yup": "^1.4.0",
     "zustand": "^4.5.2",
     "clsx": "^2.1.0",
-    "axios": "^1.6.8"
+    "axios": "^1.6.8",
+    "class-variance-authority": "^0.7.0"
   },
   "devDependencies": {
     "@types/node": "^20",
