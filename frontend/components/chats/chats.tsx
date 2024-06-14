@@ -3,11 +3,11 @@
 import { FC, useEffect, useState, Suspense } from "react";
 import ChatsHistoryList from "./history/chats-history-list";
 import { Chat, History, User } from "@/models/model";
+import { getChatsDetails } from "@/app/action";
 import ChatsDetailsList from "./details/chats.details-list";
 import WebSocketConnection from "./websocket-connection";
 import { useSearchParams } from "next/navigation";
 import useAuthStore from "@/store/useAuthStore";
-import { getChatsDetails } from "@/app/dashboard/chats/action";
 
 interface ChatsProps {
   histories: History[];

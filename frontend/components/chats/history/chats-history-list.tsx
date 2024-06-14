@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getSocial } from "@/app/dashboard/social/action";
+import { getSocial } from "@/app/social/action";
 import SocialListRow from "@/components/social/social-list/social-list-row";
 import { useRouter } from "next/navigation";
 
