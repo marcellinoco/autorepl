@@ -1,36 +1,18 @@
-# Use the official Bun image
-FROM oven/bun:latest
+FROM oven/bun
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and bun.lockb files
-COPY package.json bun.lockb ./
+COPY package.json .
+COPY bun.lockb .
 
-# Install dependencies
-RUN bun install
+RUN bun install --production
 
-# Copy the source code
-COPY src ./src
-COPY prisma ./prisma
-COPY tsconfig.json ./
+COPY src src
+COPY prisma prisma
+COPY tsconfig.json .
+# COPY public public
 
-# Set build-time argument and environment variable
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
-
-# Set environment variables
 ENV NODE_ENV production
+CMD bun start
 
-# Generate Prisma client
-RUN bun run prisma:generate
-
-# Copy the entry point script
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
-# Command to run the application
-CMD ["/app/entrypoint.sh"]
-
-# Expose the port
 EXPOSE 8080
