@@ -5,6 +5,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
+    "prestart": "bun prisma:migrate",
     "postinstall": "bun prisma:generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate"
@@ -19,7 +20,7 @@
   },
   "devDependencies": {
     "bun-types": "latest",
-    "prisma": "5.12.0"
+    "prisma": "^5.15.0"
   },
   "module": "src/index.js"
 }
