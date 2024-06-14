@@ -13,3 +13,13 @@ datasource db {
 model Dummy {
   id  Int @id @default(autoincrement())
 }
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  name        String?
+  avatar      String?
+  accessToken String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

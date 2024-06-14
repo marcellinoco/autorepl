@@ -1,24 +1,22 @@
-import { Elysia, error } from "elysia";
+import { Elysia, error, t } from "elysia";
 import swagger from "@elysiajs/swagger";
-
 import { sessionPlugin } from "elysia-session";
 import { MemoryStore } from "elysia-session/stores/memory";
-
 import { PrismaClient } from "@prisma/client";
-
 import { google } from "googleapis";
 
 const db = new PrismaClient();
-// db.dummy.create();
-
-const oauth2Scopes = ["https://www.googleapis.com/auth/gmail.readonly"];
+const oauth2Scopes = [
+  "https://www.googleapis.com/auth/userinfo.profile",
+  "https://www.googleapis.com/auth/userinfo.email",
+];
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_OAUTH2_CLIENT_ID,
   process.env.GOOGLE_OAUTH2_CLIENT_SECRET,
   process.env.GOOGLE_OAUTH2_REDIRECT_URI
 );
 
-export const app = new Elysia()
+const app = new Elysia()
   .use(swagger())
   .use(
     sessionPlugin({
@@ -26,42 +24,57 @@ export const app = new Elysia()
       expireAfter: 60 * 60,
     })
   )
-  .get("/oauth2/start", ({ session, redirect }) => {
-    const state = crypto.randomUUID().toString();
-    session.set("state", state);
+  .post(
+    "/api/auth/google",
+    async ({ body }) => {
+      const { token } = body;
 
-    console.log(state, session.get("state"));
+      oauth2Client.setCredentials({ access_token: token });
 
-    const authorizationUrl = oauth2Client.generateAuthUrl({
-      state,
-      scope: oauth2Scopes,
-      access_type: "offline",
-      include_granted_scopes: true,
-      redirect_uri: "http://localhost:8080/oauth2/callback",
-    });
+      const oauth2 = google.oauth2({ auth: oauth2Client, version: "v2" });
+      const userInfo = await oauth2.userinfo.get();
 
-    return redirect(authorizationUrl);
-  })
-  .get("/oauth2/callback", async ({ query, session }) => {
-    if (query.error) {
-      return error(400, query.error);
+      if (!userInfo.data.email) {
+        return error(401, "Unable to retrieve user info");
+      }
+
+      let user = await db.user.findUnique({
+        where: { email: userInfo.data.email },
+      });
+
+      if (!user) {
+        user = await db.user.create({
+          data: {
+            email: userInfo.data.email,
+            name: userInfo.data.name || "",
+            avatar: userInfo.data.picture || "",
+            accessToken: token,
+          },
+        });
+      } else {
+        user = await db.user.update({
+          where: { email: userInfo.data.email },
+          data: { accessToken: token || "" },
+        });
+      }
+
+      return {
+        access_token: token,
+        message: "Success to login/sign up",
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          avatar: user.avatar,
+        },
+      };
+    },
+    {
+      body: t.Object({
+        token: t.String(),
+      }),
     }
-
-    console.log(query.state, session.get("state"));
-    if (query.state !== session.get("state")) {
-      return error(401, "State mismatch");
-    }
-
-    if (!query.code) {
-      return error(401, "Code unavailable");
-    }
-
-    const { tokens } = await oauth2Client.getToken(query.code);
-    oauth2Client.setCredentials(tokens);
-
-    // TODO: Store refresh token
-    // TODO: Access Gmail
-  })
+  )
   .get("/", () => "Hello Elysia")
   .use(swagger())
   .listen(8080);
