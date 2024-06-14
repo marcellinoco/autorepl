@@ -1,6 +1,5 @@
 // action.ts
-
-"use server";
+'use server';
 
 import { Chat, History, User } from "@/models/model";
 import { cookies } from "next/headers";
