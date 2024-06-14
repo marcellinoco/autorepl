@@ -16,7 +16,6 @@ ENV DATABASE_URL=$DATABASE_URL
 
 ENV NODE_ENV production
 RUN bun run prisma:migrate
-RUN bun run prisma generate
 
 CMD ["bun", "src/index.ts"]
 

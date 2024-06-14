@@ -4,7 +4,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "postinstall": "bun run prisma:generate"
   },
   "dependencies": {
     "@elysiajs/swagger": "^1.0.5",
