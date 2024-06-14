@@ -7,7 +7,7 @@ import { FC, useState } from "react";
 
 const Sidebar: FC = () => {
   const { user, clear } = useAuthStore();
-  const router = useRouter();
+  const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
