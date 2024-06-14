@@ -31,8 +31,8 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
   const [curHistory, setCurHistory] = useState(histories);
 
   const getUser = async () => {
-    const { users } = await getSocial();
-    setFriends(users);
+    // const { users } = await getSocial();
+    setFriends([]);
   };
 
   useEffect(() => {
