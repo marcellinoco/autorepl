@@ -1,4 +1,3 @@
-"use server";
 // app/wiki/upload/page.tsx
 
 import { useRouter } from "next/router";
