@@ -26,3 +26,12 @@ export interface Chat {
   sender: User;
   sender_uid: string;
 }
+
+//Wiki is an article user later refer to
+export interface Wiki {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  creator: User;
+}
