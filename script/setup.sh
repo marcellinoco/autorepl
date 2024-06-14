@@ -3,7 +3,7 @@
 echo "Start to execute script"
 echo "============================================================"
 
-docker-compose down
+# docker-compose down
 
 copy_env() {
     local dir=$1
