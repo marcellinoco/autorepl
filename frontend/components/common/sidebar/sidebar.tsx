@@ -7,8 +7,19 @@ import { FC, useState } from "react";
 
 const Sidebar: FC = () => {
   const { user, clear } = useAuthStore();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+
+  const toggleMenu = (menu: string) => {
+    setOpenMenu(openMenu === menu ? null : menu);
+  };
+
+  const handleStatusClick = (status: string) => {
+    setSelectedStatus(status);
+    console.log(`Selected Status: ${status}`);
+  };
 
   // If the path includes "/auth", return an empty fragment
   if (pathname.includes("/auth")) {
@@ -41,14 +52,13 @@ const Sidebar: FC = () => {
           {user?.email}
         </div>
       </div>
+
       <div
         className={`group flex flex-col gap-4 py-4 ${
           isCollapsed ? "items-center" : "px-[20px]"
         } flex-grow`}
       >
-        <nav
-          className={`grid gap-1 ${isCollapsed ? "justify-center" : "px-2"}`}
-        >
+        <nav className="grid gap-1">
           <a
             className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
             href="/"
@@ -70,30 +80,153 @@ const Sidebar: FC = () => {
             </svg>
             {!isCollapsed && "Inbox"}
           </a>
+
+          {/* Client's Mood Section */}
           <a
             className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
-            href="/social"
+            onClick={() => toggleMenu('mood')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
               fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
               stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-users-round mr-2 h-4 w-4"
+              className="mr-2 h-4 w-4"
             >
-              <path d="M18 21a8 8 0 0 0-16 0"></path>
-              <circle cx="10" cy="8" r="5"></circle>
-              <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z"
+              />
             </svg>
-            {!isCollapsed && "Social"}
+            {!isCollapsed && "Client’s Mood"}
           </a>
+          <ul className={`${openMenu === 'mood' ? "" : "hidden"} pl-8`}>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'Marah' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('Marah')}
+            >
+              Marah
+            </li>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'Senang' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('Senang')}
+            >
+              Senang
+            </li>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'Jengkel' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('Jengkel')}
+            >
+              Jengkel
+            </li>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'Panik' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('Panik')}
+            >
+              Panik
+            </li>
+          </ul>
+
+          {/* Urgency Section */}
+          <a
+            className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
+            onClick={() => toggleMenu('urgency')}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="mr-2 h-4 w-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z"
+              />
+            </svg>
+            {!isCollapsed && "Urgency"}
+          </a>
+          <ul className={`${openMenu === 'urgency' ? "" : "hidden"} pl-8`}>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'Urgent' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('Urgent')}
+            >
+              Urgent
+            </li>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'Not Urgent' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('Not Urgent')}
+            >
+              Not Urgent
+            </li>
+          </ul>
+
+          {/* Inbox Status Section */}
+          <a
+            className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
+            onClick={() => toggleMenu('inbox')}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="mr-2 h-4 w-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9.348 14.652a3.75 3.75 0 0 1 0-5.304m5.304 0a3.75 3.75 0 0 1 0 5.304m-7.425 2.121a6.75 6.75 0 0 1 0-9.546m9.546 0a6.75 6.75 0 0 1 0 9.546M5.106 18.894c-3.808-3.807-3.808-9.98 0-13.788m13.788 0c3.808 3.807 3.808 9.98 0 13.788M12 12h.008v.008H12V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+              />
+            </svg>
+            {!isCollapsed && "Inbox Status"}
+          </a>
+          <ul className={`${openMenu === 'inbox' ? "" : "hidden"} pl-8`}>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'awaiting reply' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('awaiting reply')}
+            >
+              Awaiting Reply
+            </li>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'in progress' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('in progress')}
+            >
+              In Progress
+            </li>
+            <li
+              className={`text-xs cursor-pointer ${
+                selectedStatus === 'resolved' ? 'font-bold' : ''
+              }`}
+              onClick={() => handleStatusClick('resolved')}
+            >
+              Resolved
+            </li>
+          </ul>
         </nav>
       </div>
+
       <div className="px-[20px] pb-4">
         <a
           className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
