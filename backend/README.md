@@ -1,12 +1,12 @@
 # Elysia with Bun runtime
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
+## Development
+
+To setup and migrate Prisma run:
 ```bash
-bun create elysia ./elysia-example
+bun run prisma:migrate
 ```
 
-## Development
 To start the development server run:
 ```bash
 bun run dev

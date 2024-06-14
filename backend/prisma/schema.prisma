@@ -1,0 +1,15 @@
+// https://elysiajs.com/blog/with-prisma
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Dummy {
+  id  Int @id @default(autoincrement())
+}
