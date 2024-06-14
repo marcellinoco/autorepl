@@ -25,6 +25,9 @@ ENV NODE_ENV production
 # Run Prisma migrations
 RUN bun run prisma migrate deploy
 
+# Generate Prisma client
+RUN bun run prisma generate
+
 # Command to run the application
 CMD ["bun", "src/index.ts"]
 
