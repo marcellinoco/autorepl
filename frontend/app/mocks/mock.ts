@@ -76,7 +76,7 @@ export const mockRelatedHistory: RelatedHistory[] = [
     url: "https://example.com",
   },
   {
-    categories: "wiki",
+    categories: "chat",
     title: "title",
     content: "content",
     createdAt: new Date(),

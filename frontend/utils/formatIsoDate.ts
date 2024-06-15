@@ -5,7 +5,7 @@ export const formatIsoDate = (str: string) => {
   const timeZone = "UTC";
   const zonedDate = toZonedTime(date, timeZone);
 
-  const formattedDate = format(zonedDate, "MMM d, yyyy HH:mm", {
+  const formattedDate = format(zonedDate, "dd/MM/yyyy HH:mm", {
     timeZone,
   });
   return formattedDate;

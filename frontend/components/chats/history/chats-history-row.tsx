@@ -51,7 +51,7 @@ const ChatsHistoryRow: FC<ChatsHistoryRowProps> = ({ history }) => {
             history.products.slice(0,3).map((product) => (
               <span
                 key={product}
-                className="bg-gray-500 text-white text-[0.6rem] rounded-full px-0.5 py-0.3"
+                className="bg-gray-500 text-white text-[0.6rem] leading-none rounded-full px-1 py-[1.5px] pb-0.5"
               >
                 {product}
               </span>
