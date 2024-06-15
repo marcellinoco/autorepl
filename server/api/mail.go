@@ -9,6 +9,151 @@ import (
 	"google.golang.org/api/gmail/v1"
 )
 
+const (
+	PriorityHigh   = "high"
+	PriorityMedium = "medium"
+	PriorityLow    = "low"
+	PriorityNone   = "none"
+
+	MoodSad     = "sad"
+	MoodNeutral = "neutral"
+	MoodAngry   = "angry"
+	MoodHappy   = "happy"
+)
+
+var mockConversationData = []conversationData{
+	{
+		ID:      "1",
+		Subject: "Masalah Pengiriman",
+		From:    "customer@example.com",
+		Date:    "2024-06-10",
+		Content: "Halo, paket saya belum sampai padahal sudah melewati estimasi waktu pengiriman. Mohon bantuannya.",
+		Summary: "Customer mengalami masalah dengan keterlambatan pengiriman.",
+		Products: []string{
+			"Delivery",
+		},
+		Priority: PriorityHigh,
+		Mood:     MoodSad,
+	},
+	{
+		ID:      "2",
+		Subject: "Pertanyaan tentang Garansi",
+		From:    "customer@example.com",
+		Date:    "2024-06-11",
+		Content: "Apakah produk yang saya beli di Tokopedia memiliki garansi? Jika iya, berapa lama garansi tersebut berlaku?",
+		Summary: "Customer menanyakan tentang garansi produk di Tokopedia.",
+		Products: []string{
+			"Warranty",
+		},
+		Priority: PriorityMedium,
+		Mood:     MoodNeutral,
+	},
+	{
+		ID:      "3",
+		Subject: "Permintaan Refund",
+		From:    "customer@example.com",
+		Date:    "2024-06-12",
+		Content: "Saya ingin meminta refund untuk produk yang saya beli karena tidak sesuai dengan deskripsi. Apa prosedurnya?",
+		Summary: "Customer ingin meminta refund untuk produk yang tidak sesuai dengan deskripsi.",
+		Products: []string{
+			"Refund",
+		},
+		Priority: PriorityHigh,
+		Mood:     MoodAngry,
+	},
+	{
+		ID:      "4",
+		Subject: "Pengiriman Terlambat",
+		From:    "customer@example.com",
+		Date:    "2024-06-13",
+		Content: "Produk yang saya pesan belum sampai hingga sekarang. Padahal sudah lewat dari estimasi waktu pengiriman.",
+		Summary: "Customer mengeluh tentang keterlambatan pengiriman produk.",
+		Products: []string{
+			"Delivery",
+		},
+		Priority: PriorityMedium,
+		Mood:     MoodSad,
+	},
+	{
+		ID:      "5",
+		Subject: "Komplain Kualitas Produk",
+		From:    "customer@example.com",
+		Date:    "2024-06-14",
+		Content: "Kualitas produk yang saya terima sangat buruk. Bagaimana cara saya mendapatkan penggantian?",
+		Summary: "Customer komplain tentang kualitas produk yang buruk.",
+		Products: []string{
+			"Product Quality",
+		},
+		Priority: PriorityHigh,
+		Mood:     MoodAngry,
+	},
+	{
+		ID:      "6",
+		Subject: "Pertanyaan tentang Fitur",
+		From:    "customer@example.com",
+		Date:    "2024-06-15",
+		Content: "Saya ingin tahu lebih lanjut tentang fitur yang ada pada produk ini. Bisakah Anda menjelaskan lebih detail?",
+		Summary: "Customer ingin tahu lebih lanjut tentang fitur produk.",
+		Products: []string{
+			"Product Features",
+		},
+		Priority: PriorityLow,
+		Mood:     MoodNeutral,
+	},
+	{
+		ID:      "7",
+		Subject: "Diskon dan Promosi",
+		From:    "customer@example.com",
+		Date:    "2024-06-16",
+		Content: "Apakah saat ini ada diskon atau promosi untuk produk ini? Saya tertarik untuk membeli lebih banyak jika ada.",
+		Summary: "Customer menanyakan tentang diskon dan promosi.",
+		Products: []string{
+			"Discounts and Promotions",
+		},
+		Priority: PriorityLow,
+		Mood:     MoodHappy,
+	},
+	{
+		ID:      "8",
+		Subject: "Kesulitan dalam Pemesanan",
+		From:    "customer@example.com",
+		Date:    "2024-06-17",
+		Content: "Saya mengalami kesulitan saat melakukan pemesanan di Tokopedia. Mohon bantuannya.",
+		Summary: "Customer mengalami kesulitan saat melakukan pemesanan di Tokopedia.",
+		Products: []string{
+			"Ordering Issues",
+		},
+		Priority: PriorityMedium,
+		Mood:     MoodSad,
+	},
+	{
+		ID:      "9",
+		Subject: "Request for Invoice",
+		From:    "customer@example.com",
+		Date:    "2024-06-18",
+		Content: "Could you please send me the invoice for my recent purchase? I need it for my records.",
+		Summary: "Customer meminta invoice untuk pembelian terbaru.",
+		Products: []string{
+			"Invoice",
+		},
+		Priority: PriorityLow,
+		Mood:     MoodNeutral,
+	},
+	{
+		ID:      "10",
+		Subject: "Feedback on Customer Service",
+		From:    "customer@example.com",
+		Date:    "2024-06-19",
+		Content: "I want to provide feedback on your customer service. The response time was excellent and the staff was very helpful.",
+		Summary: "Customer memberikan feedback positif tentang layanan pelanggan.",
+		Products: []string{
+			"Customer Service",
+		},
+		Priority: PriorityNone,
+		Mood:     MoodHappy,
+	},
+}
+
 type emailRequest struct {
 	MaxResults int64  `json:"maxResults" binding:"required"`
 	PageToken  string `json:"pageToken"`
@@ -174,7 +319,7 @@ func (server *Server) getEmails(ctx *gin.Context) {
 
 	// send to FE
 	var res emailResponse
-	for _, mail := range emails {
+	for i, mail := range emails {
 		res.Emails = append(res.Emails, conversationData{
 			ID:       mail.ID,
 			Subject:  mail.Subject,
@@ -182,10 +327,10 @@ func (server *Server) getEmails(ctx *gin.Context) {
 			Date:     mail.Date,
 			ThreadID: mail.ThreadID,
 			Content:  mail.Content,
-			Summary:  mail.Summary,
-			Products: nil,
-			Priority: mail.Priority,
-			Mood:     mail.Mood,
+			Summary:  mockConversationData[i%len(mockConversationData)].Summary,
+			Products: mockConversationData[i%len(mockConversationData)].Products,
+			Priority: mockConversationData[i%len(mockConversationData)].Priority,
+			Mood:     mockConversationData[i%len(mockConversationData)].Mood,
 		})
 	}
 
