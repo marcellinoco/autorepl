@@ -97,33 +97,6 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
         <div className="flex items-center px-4 py-2">
           <h1 className="text-xl font-bold">Inbox</h1>
           <div className="inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground ml-auto outline-none">
-            <Dialog>
-              <DialogTrigger
-                id="new-msg-trigger"
-                className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 rounded-md px-3 text-xs"
-              >
-                New Message
-              </DialogTrigger>
-              <DialogContent className="w-fit">
-                <DialogHeader>
-                  <DialogTitle>Select User</DialogTitle>
-                </DialogHeader>
-                <ScrollArea className="max-h-[500px] h-full flex flex-col gap-2 w-[350px] p-0">
-                  {friends?.map((friend, idx) => (
-                    <div
-                      key={friend.uid}
-                      className={`mb-2 mr-4 ${idx === friends.length - 1 && "!mb-0"}`}
-                      onClick={() => {
-                        document.getElementById("new-msg-trigger")?.click();
-                        router.push(`/?uid=${friend?.uid}&name=${friend?.name}`);
-                      }}
-                    >
-                      {friend.name}
-                    </div>
-                  ))}
-                </ScrollArea>
-              </DialogContent>
-            </Dialog>
           </div>
         </div>
         <div className="shrink-0 bg-border h-[1px] w-full"></div>
