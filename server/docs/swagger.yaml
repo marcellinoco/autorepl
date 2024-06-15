@@ -15,15 +15,54 @@ definitions:
       updatedAt:
         type: string
     type: object
-  api.emailData:
+  api.conversationData:
     properties:
+      content:
+        type: string
       date:
         type: string
       from:
         type: string
       id:
         type: string
+      mood:
+        type: string
+      priority:
+        type: string
+      products:
+        items:
+          type: string
+        type: array
       subject:
+        type: string
+      summary:
+        type: string
+      thread:
+        $ref: '#/definitions/api.threadDetail'
+      threadId:
+        type: string
+    type: object
+  api.emailData:
+    properties:
+      content:
+        type: string
+      date:
+        type: string
+      from:
+        type: string
+      id:
+        type: string
+      mood:
+        type: string
+      priority:
+        type: string
+      products:
+        items:
+          type: string
+        type: array
+      subject:
+        type: string
+      summary:
         type: string
       thread:
         $ref: '#/definitions/api.threadDetail'
@@ -43,7 +82,7 @@ definitions:
     properties:
       emails:
         items:
-          $ref: '#/definitions/api.emailData'
+          $ref: '#/definitions/api.conversationData'
         type: array
       nextPageToken:
         type: string

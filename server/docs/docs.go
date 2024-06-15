@@ -178,9 +178,12 @@ const docTemplate = `{
                 }
             }
         },
-        "api.emailData": {
+        "api.conversationData": {
             "type": "object",
             "properties": {
+                "content": {
+                    "type": "string"
+                },
                 "date": {
                     "type": "string"
                 },
@@ -190,7 +193,63 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "mood": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "subject": {
+                    "type": "string"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "thread": {
+                    "$ref": "#/definitions/api.threadDetail"
+                },
+                "threadId": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.emailData": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "from": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mood": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "string"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "summary": {
                     "type": "string"
                 },
                 "thread": {
@@ -221,7 +280,7 @@ const docTemplate = `{
                 "emails": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/api.emailData"
+                        "$ref": "#/definitions/api.conversationData"
                     }
                 },
                 "nextPageToken": {
