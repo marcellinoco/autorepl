@@ -9,12 +9,14 @@ export interface User {
 
 export interface History {
   id: string;
-  summary: string;
+  summary: string; //ML (Content)
   date: string;
   from: string;
-  products?: string[];
-  priority?: Priority;
-  mood?: Mood;
+  subject?: string;
+  threadId?: string;
+  products?: string[];  //ML
+  priority?: Priority; //ML
+  mood?: Mood; //ML
 }
 
 export interface Mail {
