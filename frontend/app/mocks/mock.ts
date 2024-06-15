@@ -1,7 +1,6 @@
 // mocks/mockData.ts
 
-import { User, History, Chat, RelatedHistory } from "@/models/model";
-import { create } from "domain";
+import { User, History, Chat, RelatedHistory, MailPreview } from "@/models/model";
 
 export const mockUser: User = {
   avatar: "https://example.com/avatar.jpg",
@@ -12,26 +11,39 @@ export const mockUser: User = {
   provider: "google",
 };
 
+export enum Priority {
+  LOW = "low",
+  MEDIUM = "medium",
+  HIGH = "high",
+  NONE = "none",
+}
+
+export enum Mood {
+  HAPPY = "happy",
+  SAD = "sad",
+  ANGRY = "angry",
+  NEUTRAL = "neutral",
+}
+
 export const mockHistories: History[] = [
   {
     id: "history-1",
-    latest_content: "Hello there!",
-    latest_created_at: "2023-06-14T23:00:00Z",
-    receiver_name: "Jane Smith",
-    receiver_uid: "user-456",
-    sender_name: "John Doe",
-    sender_uid: "user-123",
+    summary: "Hello there!",
+    date: "2023-06-14T12:00:00Z",
+    from: "John Doe",
+    products: ["product-1", "product-2", "product-3"],
+    priority: Priority.HIGH,
+    mood: Mood.ANGRY
   },
   {
     id: "history-2",
-    latest_content: "How are you?",
-    latest_created_at: "2023-06-14T12:05:00Z",
-    receiver_name: "Jane Smith",
-    receiver_uid: "user-456",
-    sender_name: "John Doe",
-    sender_uid: "user-123",
-  },  
-
+    summary: "How are you?",
+    date: "2023-06-14T12:05:00Z",
+    from: "John Doe",
+    products: ["product-1"],
+    priority: Priority.MEDIUM,
+    mood: Mood.HAPPY
+  },
 ];
 
 export const mockChats: Chat[] = [
