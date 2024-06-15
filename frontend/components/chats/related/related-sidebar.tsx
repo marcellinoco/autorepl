@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const RelatedSidebar: FC = () => {
   const { user, clear } = useAuthStore();
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); 
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [relatedHistory, setRelatedHistory] = useState<RelatedHistory[]>([]);
@@ -50,7 +50,6 @@ const RelatedSidebar: FC = () => {
         >
           {isCollapsed ? "☰" : "✕"}
         </button>
-        {!isCollapsed && <h1 className="text-xl font-bold">Related</h1>}
       </div>
       <div className="shrink-0 bg-border h-[1px] w-full"></div>
       <div
@@ -59,10 +58,7 @@ const RelatedSidebar: FC = () => {
           isCollapsed && "hidden"
         )}
       >
-        <div className="text-base font-bold line-clamp-1">{user?.name}</div>
-        <div className="text-xs overflow-truncate line-clamp-1">
-          {user?.email}
-        </div>
+        <div className="text-lg md:text-xl font-bold line-clamp-1">Related Contents</div>
       </div>
 
       <div

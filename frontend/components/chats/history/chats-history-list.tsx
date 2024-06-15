@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useRef, useCallback } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { History, User } from "@/models/model";
 import ChatsHistoryRow from "./chats-history-row";
@@ -28,7 +28,12 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
   const [friends, setFriends] = useState<User[] | null>(null);
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
-  const [curHistory, setCurHistory] = useState(histories);
+  const [curHistory, setCurHistory] = useState<History[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const itemsPerPage = 10;
+  const page = useRef(0);
 
   const getUser = async () => {
     // const { users } = await getSocial();
@@ -39,24 +44,55 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
     getUser();
   }, []);
 
+  const fetchMoreData = useCallback(() => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    const startIndex = page.current * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const newHistories = histories?.slice(startIndex, endIndex) || [];
+    if (newHistories.length > 0) {
+      setCurHistory((prev) => [...prev, ...newHistories]);
+      page.current += 1;
+    } else {
+      setHasMore(false);
+    }
+    setLoading(false);
+  }, [loading, hasMore, histories]);
+
   useEffect(() => {
     if (searchValue.trim().length) {
-      let newHistory = histories?.filter((history) => {
-        const sv = searchValue.toLowerCase();
-        return (
-          history.latest_content.toLowerCase().includes(sv) ||
-          history.sender_name.toLowerCase().includes(sv) ||
-          history.receiver_name.toLocaleLowerCase().includes(sv)
-        );
-      });
+      const sv = searchValue.toLowerCase();
+      const filteredHistories = histories?.filter((history) => (
+        history.latest_content.toLowerCase().includes(sv) ||
+        history.sender_name.toLowerCase().includes(sv) ||
+        history.receiver_name.toLowerCase().includes(sv)
+      )) || [];
 
-      if (newHistory) {
-        setCurHistory(newHistory);
-      }
+      setCurHistory(filteredHistories);
+      setHasMore(filteredHistories.length > itemsPerPage);
+      page.current = 1;
     } else {
-      setCurHistory(histories);
+      setCurHistory(histories?.slice(0, itemsPerPage) || []);
+      setHasMore((histories?.length || 0) > itemsPerPage);
+      page.current = 1;
     }
   }, [searchValue, histories]);
+
+  const lastElementRef = useCallback((node: HTMLElement | null) => {
+    if (loading) return;
+
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore) {
+        fetchMoreData();
+      }
+    });
+
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore, fetchMoreData]);
 
   return (
     <div className="relative shrink basis-0 grow-[40] border-x">
@@ -79,14 +115,10 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
                   {friends?.map((friend, idx) => (
                     <div
                       key={friend.uid}
-                      className={`mb-2 mr-4 ${
-                        idx === friends.length - 1 && "!mb-0"
-                      }`}
+                      className={`mb-2 mr-4 ${idx === friends.length - 1 && "!mb-0"}`}
                       onClick={() => {
                         document.getElementById("new-msg-trigger")?.click();
-                        router.push(
-                          `/?uid=${friend?.uid}&name=${friend?.name}`
-                        );
+                        router.push(`/?uid=${friend?.uid}&name=${friend?.name}`);
                       }}
                     >
                       <SocialListRow user={friend} />
@@ -125,7 +157,7 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
           <div className="w-full rounded-lg">
             <div className="min-w-full table">
               <div className="flex flex-col gap-2 p-4 pt-4">
-                {curHistory?.map((history) => (
+                {curHistory?.map((history, index) => (
                   <div
                     key={history?.id}
                     onClick={() => {
@@ -135,16 +167,17 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
                           : history?.receiver_uid
                       );
                     }}
+                    ref={index === curHistory.length - 1 ? lastElementRef : null}
                   >
                     <ChatsHistoryRow history={history} />
                   </div>
-                )) ?? []}
+                ))}
+                {loading && <p>Loading...</p>}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 m-0"></div>
     </div>
   );
 };

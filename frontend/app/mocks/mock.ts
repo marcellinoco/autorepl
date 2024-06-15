@@ -16,7 +16,7 @@ export const mockHistories: History[] = [
   {
     id: "history-1",
     latest_content: "Hello there!",
-    latest_created_at: "2023-06-14T12:00:00Z",
+    latest_created_at: "2023-06-14T23:00:00Z",
     receiver_name: "Jane Smith",
     receiver_uid: "user-456",
     sender_name: "John Doe",
@@ -30,7 +30,8 @@ export const mockHistories: History[] = [
     receiver_uid: "user-456",
     sender_name: "John Doe",
     sender_uid: "user-123",
-  },
+  },  
+
 ];
 
 export const mockChats: Chat[] = [
