@@ -34,7 +34,7 @@ const ChatsDetailsRow: FC<ChatsDetailsRowProps> = ({ activeUser, chat }) => {
         )}
         <div
           className={`px-4 py-2 rounded-lg ${
-            isMyFriend() ? "bg-[#06C755] text-[#FFF]" : "bg-[#DDD]"
+            isMyFriend() ? "bg-custom-primary text-[#FFF]" : "bg-[#DDD]"
           }`}
         >
           {chat.content}

@@ -1,7 +1,7 @@
 // mocks/mockFunctions.ts
 
-import { History, Chat, User } from "@/models/model";
-import { mockHistories, mockChats, mockUser } from "./mock"
+import { History, Chat, User, RelatedHistory } from "@/models/model";
+import { mockHistories, mockChats, mockUser, mockRelatedHistory } from "./mock"
 
 export async function getHistory(): Promise<{
   histories: History[];
@@ -17,5 +17,13 @@ export async function getChatsDetails(uid: string): Promise<{
 }> {
   return new Promise((resolve) => {
     resolve({ chats: mockChats, user: mockUser });
+  });
+}
+
+export async function getRelatedHistory(): Promise<{
+  relatedHistory: RelatedHistory[];
+}> {
+  return new Promise((resolve) => {
+    resolve({ relatedHistory: mockRelatedHistory });
   });
 }

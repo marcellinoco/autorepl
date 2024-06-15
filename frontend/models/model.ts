@@ -26,3 +26,11 @@ export interface Chat {
   sender: User;
   sender_uid: string;
 }
+
+export interface RelatedHistory {
+  categories: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+  url: string;
+};

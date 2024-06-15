@@ -8,6 +8,7 @@ import ChatsDetailsList from "./details/chats.details-list";
 import WebSocketConnection from "./websocket-connection";
 import { useSearchParams } from "next/navigation";
 import useAuthStore from "@/store/useAuthStore";
+import RelatedSidebar from "./related/related-sidebar";
 
 interface ChatsProps {
   histories: History[];
@@ -141,6 +142,7 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
         chats={chats}
         sendMessage={sendMessage}
       />
+      <RelatedSidebar />
       <WebSocketConnection
         socket={socket}
         url={`${process.env.NEXT_PUBLIC_WEBSOCKET_BACKEND}/ws/chats`}

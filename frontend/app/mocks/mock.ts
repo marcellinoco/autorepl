@@ -1,6 +1,7 @@
 // mocks/mockData.ts
 
-import { User, History, Chat } from "@/models/model";
+import { User, History, Chat, RelatedHistory } from "@/models/model";
+import { create } from "domain";
 
 export const mockUser: User = {
   avatar: "https://example.com/avatar.jpg",
@@ -50,5 +51,22 @@ export const mockChats: Chat[] = [
     receiver_uid: "user-456",
     sender: mockUser,
     sender_uid: "user-123",
+  },
+];
+
+export const mockRelatedHistory: RelatedHistory[] = [
+  {
+    categories: "wiki",
+    title: "title",
+    content: "content",
+    createdAt: new Date("2023-06-14T12:00:00Z"),
+    url: "https://example.com",
+  },
+  {
+    categories: "wiki",
+    title: "title",
+    content: "content",
+    createdAt: new Date(),
+    url: "https://example.com",
   },
 ];
