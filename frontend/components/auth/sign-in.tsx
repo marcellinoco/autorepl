@@ -60,6 +60,7 @@ const SignIn: FC = () => {
     },
     onError: () => {},
     flow: "implicit",
+    scope: "https://www.googleapis.com/auth/gmail.readonly",
   });
 
   const successfullyLoginHandler = (user: User, accessToken: string) => {
