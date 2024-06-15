@@ -33,7 +33,7 @@ const Sidebar: FC = () => {
       }`}
     >
       <div className="h-[52px] flex items-center px-5 justify-between">
-        {!isCollapsed && <h1 className="text-xl font-bold">Autorepl.AI</h1>}
+        {!isCollapsed && <h1 className="text-3xl font-bold">Autorepl.AI</h1>}
         <button
           className="text-xl font-bold"
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -47,9 +47,9 @@ const Sidebar: FC = () => {
           isCollapsed ? "hidden" : ""
         }`}
       >
-        <div className="text-base font-bold line-clamp-1">{user?.name}</div>
-        <div className="text-xs overflow-truncate line-clamp-1">
-          {user?.email}
+        <div className="grid gap-1">
+          <h1 className="text-base md:text-xl font-bold line-clamp-1">{user?.name}</h1>
+          <h2 className="text-xs md:text-sm font-normal overflow-truncate line-clamp-1">{user?.email}</h2>
         </div>
       </div>
 
@@ -79,6 +79,16 @@ const Sidebar: FC = () => {
               <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
             </svg>
             {!isCollapsed && "Inbox"}
+          </a>
+
+          <a
+            className="cursor-pointer inline-flex items-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 justify-start"
+            href="/wiki"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="lucide lucide-inbox mr-2 h-4 w-4 ">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+            </svg>
+            {!isCollapsed && "Wiki"}
           </a>
 
           {/* Client's Mood Section */}
