@@ -52,9 +52,6 @@ func authMiddleware() gin.HandlerFunc {
 
 		ctx.Set(authorizationPayloadKey, tokenInfo)
 		ctx.Set(oauthToken, accessToken)
-
-		fmt.Println("Token Info:", tokenInfo)
-		fmt.Println("OAuth Token:", accessToken)
 		ctx.Next()
 	}
 }
@@ -74,9 +71,6 @@ func verifyGoogleToken(token string) (*GoogleTokenInfo, error) {
 	}
 	defer resp.Body.Close()
 
-	fmt.Println("Response Status:", resp.StatusCode)
-	fmt.Println("Token:", token)
-
 	if resp.StatusCode != http.StatusOK {
 		var errorResponse map[string]interface{}
 		json.NewDecoder(resp.Body).Decode(&errorResponse)
@@ -85,12 +79,9 @@ func verifyGoogleToken(token string) (*GoogleTokenInfo, error) {
 
 	var tokenInfo GoogleTokenInfo
 	if err := json.NewDecoder(resp.Body).Decode(&tokenInfo); err != nil {
-		fmt.Println("token ga bisa di decode")
 		return nil, err
 	}
-
-	fmt.Println("token info oke")
-
+	
 	// Convert expires_in to an integer
 	expiresIn, err := strconv.Atoi(tokenInfo.ExpiresIn)
 	if err != nil {

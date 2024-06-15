@@ -42,6 +42,10 @@ type emailData struct {
 	ThreadID string       `json:"threadId"`
 	Content  string       `json:"content"`
 	Thread   threadDetail `json:"thread"`
+	Summary string `json:"summary"`
+	Products []string `json:"products"`
+	Priority string 	`json:"priority"`
+	Mood string `json:"mood"`
 }
 
 type emailReqML struct {
