@@ -44,7 +44,7 @@ const RelatedSidebar: FC = () => {
       }`}
     >
       <div className="h-[52px] flex items-center px-5 justify-between">
-        {!isCollapsed && <h1 className="text-xl font-bold">Autorepl.AI</h1>}
+        {!isCollapsed && <h1 className="text-xl font-bold"></h1>}
         <button
           className="text-xl font-bold"
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -59,10 +59,7 @@ const RelatedSidebar: FC = () => {
           isCollapsed && "hidden"
         )}
       >
-        <div className="text-base font-bold line-clamp-1">{user?.name}</div>
-        <div className="text-xs overflow-truncate line-clamp-1">
-          {user?.email}
-        </div>
+        <div className="text-lg md:text-xl font-bold line-clamp-1">History and Wiki</div>
       </div>
 
       <div

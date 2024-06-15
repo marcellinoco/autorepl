@@ -30,6 +30,19 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
   const [searchValue, setSearchValue] = useState("");
   const [curHistory, setCurHistory] = useState(histories);
 
+  // State untuk pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Menghitung jumlah halaman
+  const totalPages = Math.ceil((curHistory?.length ?? 0) / itemsPerPage);
+
+  // Mengambil item untuk halaman saat ini
+  const currentItems = curHistory?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const getUser = async () => {
     // const { users } = await getSocial();
     setFriends([]);
@@ -57,6 +70,11 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
       setCurHistory(histories);
     }
   }, [searchValue, histories]);
+
+  // Fungsi untuk menangani perubahan halaman
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
   return (
     <div className="relative shrink basis-0 grow-[40] border-x">
@@ -125,7 +143,7 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
           <div className="w-full rounded-lg">
             <div className="min-w-full table">
               <div className="flex flex-col gap-2 p-4 pt-4">
-                {curHistory?.map((history) => (
+                {currentItems?.map((history) => (
                   <div
                     key={history?.id}
                     onClick={() => {
@@ -144,7 +162,26 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
           </div>
         </div>
       </div>
-      <div className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 m-0"></div>
+
+      <div className="sticky bottom-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t flex justify-center items-center p-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-2 py-2 border rounded-md mx-2"
+        >
+          Previous
+        </button>
+        <span className="mx-auto">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 border rounded-md mx-2"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
