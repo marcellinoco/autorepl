@@ -18,7 +18,6 @@ const Sidebar: FC = () => {
 
   const handleStatusClick = (status: string) => {
     setSelectedStatus(status);
-    console.log(`Selected Status: ${status}`);
   };
 
   // If the path includes "/auth", return an empty fragment

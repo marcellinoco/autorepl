@@ -1,31 +1,35 @@
 // action.ts
-'use server';
+"use server";
 
 import { Chat, History, User } from "@/models/model";
 import { cookies } from "next/headers";
 
-// Import mock functions for testing
-import {
-  getHistory as mockGetHistory,
-  getChatsDetails as mockGetChatsDetails,
-} from "./mocks/mockFunction";
+import { getChatsDetails as mockGetChatsDetails } from "./mocks/mockFunction";
+import { serverAxios } from "@/utils/axios";
 
 export async function getHistory(): Promise<{
-  histories: History[];
+  emails: History[];
 }> {
   "use server";
   try {
-    // Uncomment the following lines when not testing
-    // const accessToken = cookies().get("access_token")?.value;
-    // const { data } = await serverAxios.get<{
-    //   histories: History[];
-    // }>("/api/chats/histories", {
-    //   headers: { Authorization: `Bearer ${accessToken}` },
-    // });
+    const accessToken = cookies().get("accessToken")?.value;
+    const { data } = await serverAxios.post<{
+      emails: History[];
+    }>(
+      "/api/emails",
+      {
+        maxResults: 5,
+        pageToken: "",
+      },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
 
-    // Mocked response for testing
-    const data = await mockGetHistory();
-
+    let e = data.emails.map((email) => {
+      return { ...email, from: email.from.split(" <")[0] };
+    });
+    data.emails = e;
     return data;
   } catch (error) {
     console.error("Error in getHistory:", error);

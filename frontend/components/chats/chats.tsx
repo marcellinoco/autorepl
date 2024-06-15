@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useState, Suspense } from "react";
 import ChatsHistoryList from "./history/chats-history-list";
-import { Chat, History, User } from "@/models/model";
+import { Chat, History, Mood, Priority, User } from "@/models/model";
 import { getChatsDetails } from "@/app/action";
 import ChatsDetailsList from "./details/chats.details-list";
 import WebSocketConnection from "./websocket-connection";
@@ -32,14 +32,6 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
     setCurHistory((cHistory) => {
       let newHistory =
         cHistory?.filter((hs) => {
-          // if (
-          //   (chat?.sender_uid === hs?.sender_uid &&
-          //     chat?.receiver_uid === hs?.receiver_uid) ||
-          //   (chat?.receiver_uid === hs?.sender_uid &&
-          //     chat?.sender_uid === hs?.receiver_uid)
-          // ) {
-          //   return false;
-          // }
           return true;
         }) ?? [];
 
@@ -91,14 +83,17 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
 
     setCurHistory((cHistory) => {
       const newHs: History = {
-        id: new Date().toISOString(),
+        id: new Date().toString(),
+        subject: "",
+        from: "",
+        date: new Date(),
+        threadId: new Date().toString(),
+        content: "",
         summary: "",
-        date: new Date().toISOString(),
-        receiver_name: nameActive,
-        receiver_uid: uidActive,
-        from: user?.name,
-        sender_uid: user?.id,
-      } as History;
+        products: [],
+        priority: Priority.HIGH,
+        mood: Mood.ANGRY,
+      } as unknown as History;
 
       let idx: number = -1;
 
