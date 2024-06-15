@@ -15,7 +15,7 @@ async function isGoogleAccessTokenValid(accessToken: string): Promise<boolean> {
 }
 
 export async function middleware(request: NextRequest) {
-  const accessToken = cookies().get("access_token")?.value;
+  const accessToken = cookies().get("accessToken")?.value;
 
   if (
     request.nextUrl.pathname.endsWith(".js") ||
@@ -30,6 +30,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const isTokenValid = await isGoogleAccessTokenValid(accessToken ?? "");
+
 
   if (!isTokenValid && !request.nextUrl.pathname.includes("/auth")) {
     const authUrl = new URL("/auth", request.url).toString();

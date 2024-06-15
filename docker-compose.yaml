@@ -8,20 +8,22 @@ services:
     env_file:
       - .env
 
-  backend:
-    container_name: "backend"
-    build:
-      context: ./backend
-      args:
-        DATABASE_URL: ${DATABASE_URL}
+  server:
+    container_name: "server"
+    build: ./server
     ports:
       - "8080:8080"
     restart: unless-stopped
     env_file:
       - .env
     depends_on:
-      db:
-        condition: service_healthy
+      - db
+
+    command: >
+      sh -c "
+      migrate -path db/migration -database 'postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable' --verbose up
+      && ./main
+      "
   
   db:
     container_name: "db"

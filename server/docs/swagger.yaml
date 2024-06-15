@@ -1,0 +1,122 @@
+basePath: /api
+definitions:
+  api.UserResponse:
+    properties:
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  api.googleRequest:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  api.googleResponse:
+    properties:
+      accessToken:
+        type: string
+      message:
+        type: string
+      user:
+        $ref: '#/definitions/api.UserResponse'
+    type: object
+  api.updateUserRequest:
+    properties:
+      avatar:
+        type: string
+      name:
+        type: string
+    type: object
+  api.updateUserResponse:
+    properties:
+      message:
+        type: string
+      user:
+        $ref: '#/definitions/api.UserResponse'
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a documentation for Segment3d App API
+  title: Segment3d App API Documentation
+  version: "1.0"
+paths:
+  /auth/google:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with Google OAuth token
+      parameters:
+      - description: Google OAuth token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.googleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Succes to login/sign up
+          schema:
+            $ref: '#/definitions/api.googleResponse'
+      summary: Google Auth
+      tags:
+      - auth
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information retrieved successfully
+          schema:
+            $ref: '#/definitions/api.UserResponse'
+      security:
+      - BearerAuth: []
+      summary: Get user data
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Update user information based on the provided user ID
+      parameters:
+      - description: User update details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.updateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User information updated successfully
+          schema:
+            $ref: '#/definitions/api.updateUserResponse'
+      security:
+      - BearerAuth: []
+      summary: Update user information
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

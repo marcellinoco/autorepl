@@ -8,15 +8,15 @@ import { redirect } from "next/navigation";
 export async function signin(
   email: string,
   password: string
-): Promise<{ access_token: string; user: User }> {
+): Promise<{ accessToken: string; user: User }> {
   "use server";
   try {
     const { data } = await serverAxios.post<{
       user: User;
-      access_token: string;
+      accessToken: string;
     }>("/api/auth/signin", { email, password });
 
-    cookies().set("access_token", data.access_token);
+    cookies().set("accessToken", data.accessToken);
     return data;
   } catch (error) {
     throw error;
@@ -25,15 +25,15 @@ export async function signin(
 
 export async function google(
   token: string
-): Promise<{ access_token: string; user: User }> {
+): Promise<{ accessToken: string; user: User }> {
   "use server";
   try {
     const { data } = await serverAxios.post<{
       user: User;
-      access_token: string;
+      accessToken: string;
     }>("/api/auth/google", { token });
 
-    cookies().set("access_token", data.access_token);
+    cookies().set("accessToken", data.accessToken);
     return data;
   } catch (error) {
     throw error;
@@ -44,15 +44,15 @@ export async function signup(
   email: string,
   name: string,
   password: string
-): Promise<{ access_token: string; user: User }> {
+): Promise<{ accessToken: string; user: User }> {
   "use server";
   try {
     const { data } = await serverAxios.post<{
       user: User;
-      access_token: string;
+      accessToken: string;
     }>("/api/auth/signup", { email, password, name });
 
-    cookies().set("access_token", data.access_token);
+    cookies().set("accessToken", data.accessToken);
     return data;
   } catch (error) {
     throw error;
@@ -61,6 +61,6 @@ export async function signup(
 
 export async function logout() {
   "use server";
-  cookies().delete("access_token");
+  cookies().delete("accessToken");
   redirect("/auth");
 }

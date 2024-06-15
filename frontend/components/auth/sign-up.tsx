@@ -45,12 +45,12 @@ const SignUp: FC = () => {
   ) => {
     setSubmitting(true);
     try {
-      const { access_token, user } = await signup(
+      const { accessToken, user } = await signup(
         values.email,
         values.name,
         values.password
       );
-      successfullyLoginHandler(user, access_token);
+      successfullyLoginHandler(user, accessToken);
     } catch (err: any) {}
     setSubmitting(false);
   };
@@ -58,8 +58,8 @@ const SignUp: FC = () => {
   const signupWithGoogleHandler = useGoogleLogin({
     onSuccess: async ({ access_token: googleToken }) => {
       try {
-        const { access_token, user } = await google(googleToken);
-        successfullyLoginHandler(user, access_token);
+        const { accessToken, user } = await google(googleToken);
+        successfullyLoginHandler(user, accessToken);
       } catch (err: any) {}
     },
     onError: () => {},

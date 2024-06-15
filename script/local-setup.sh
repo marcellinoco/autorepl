@@ -23,7 +23,7 @@ copy_env() {
 
 declare -a repos=( 
     "frontend|.env"
-    "backend|.env"
+    "server|app.env"
 )
 
 for repo in "${repos[@]}"; do
