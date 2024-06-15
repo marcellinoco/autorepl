@@ -34,3 +34,18 @@ export interface RelatedHistory {
   createdAt: Date;
   url: string;
 };
+
+export interface MailPreview {
+  id: string,
+  summary: string,
+  from: string,
+  date: Date,
+}
+
+export interface Mail {
+  id: string,
+  from: string,
+  date: Date,
+  subject: string,
+  content: string,
+}

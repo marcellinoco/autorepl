@@ -44,13 +44,13 @@ const RelatedSidebar: FC = () => {
       }`}
     >
       <div className="h-[52px] flex items-center px-5 justify-between">
-        {!isCollapsed && <h1 className="text-xl font-bold">Autorepl.AI</h1>}
         <button
           className="text-xl font-bold"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           {isCollapsed ? "☰" : "✕"}
         </button>
+        {!isCollapsed && <h1 className="text-xl font-bold">Related</h1>}
       </div>
       <div className="shrink-0 bg-border h-[1px] w-full"></div>
       <div
@@ -70,19 +70,20 @@ const RelatedSidebar: FC = () => {
           isCollapsed ? "items-center" : "px-[20px]"
         } flex-grow`}
       >
-        {!isCollapsed && relatedHistory.map((item, index) => (
-          <div
-            key={index}
-            className="cursor-pointer p-4 border rounded-md"
-            onClick={() => (window.location.href = item.url)}
-          >
-            <h2 className="text-lg font-bold">{item.title}</h2>
-            <p className="text-sm">{item.content}</p>
-            <p className="text-xs text-gray-500">
-              {new Date(item.createdAt).toLocaleString()}
-            </p>
-          </div>
-        ))}
+        {!isCollapsed &&
+          relatedHistory.map((item, index) => (
+            <div
+              key={index}
+              className="cursor-pointer p-4 border rounded-md"
+              onClick={() => (window.location.href = item.url)}
+            >
+              <h2 className="text-lg font-bold">{item.title}</h2>
+              <p className="text-sm">{item.content}</p>
+              <p className="text-xs text-gray-500">
+                {new Date(item.createdAt).toLocaleString()}
+              </p>
+            </div>
+          ))}
       </div>
     </div>
   );
