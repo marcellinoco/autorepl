@@ -14,6 +14,26 @@ type emailRequest struct {
 	PageToken  string `json:"pageToken"`
 }
 
+type conversationData struct {
+	ID       string       `json:"id"`
+	Subject  string       `json:"subject"`
+	From     string       `json:"from"`
+	Date     string       `json:"date"`
+	ThreadID string       `json:"threadId"`
+	Content  string       `json:"content"`
+	Thread   threadDetail `json:"thread"`
+	Summary  string       `json:"summary"`
+	Products []string     `json:"products"`
+	Priority string       `json:"priority"`
+	Mood     string       `json:"mood"`
+}
+
+type threadDetail struct {
+	ID       string      `json:"id"`
+	Snippet  string      `json:"snippet"`
+	Messages []emailData `json:"messages"`
+}
+
 type emailData struct {
 	ID       string       `json:"id"`
 	Subject  string       `json:"subject"`
@@ -24,14 +44,12 @@ type emailData struct {
 	Thread   threadDetail `json:"thread"`
 }
 
-type threadDetail struct {
-	ID       string       `json:"id"`
-	Snippet  string       `json:"snippet"`
-	Messages []emailData  `json:"messages"`
-}
-
-type emailResponse struct {
+type emailReqML struct {
 	Emails        []emailData `json:"emails"`
+	NextPageToken string      `json:"nextPageToken"`
+}
+type emailResponse struct {
+	Emails        []conversationData `json:"emails"`
 	NextPageToken string      `json:"nextPageToken"`
 }
 
@@ -45,10 +63,7 @@ type emailResponse struct {
 // @Security BearerAuth
 // @Router /emails [post]
 func (server *Server) getEmails(ctx *gin.Context) {
-	var isRecorded map[string]bool
-
-	// Step 2: Initialize the map
-	isRecorded = make(map[string]bool)
+	isRecorded := make(map[string]bool)
 
 	_, token, err := getUserPayload(ctx)
 	if err != nil {
@@ -98,12 +113,10 @@ func (server *Server) getEmails(ctx *gin.Context) {
 		var email emailData
 		email.ID = msg.Id
 
-		val, exists := isRecorded[email.ID]
-		if exists && val {
+		if _, exists := isRecorded[email.ID]; exists {
 			continue
-		} else {
-			isRecorded[email.ID] = true
 		}
+		isRecorded[email.ID] = true
 
 		email.ThreadID = msg.ThreadId
 		email.Content = getMessageContent(msg)
@@ -136,7 +149,7 @@ func (server *Server) getEmails(ctx *gin.Context) {
 
 			threadEmail.ThreadID = threadMsg.ThreadId
 			threadEmail.Content = getMessageContent(threadMsg)
-			
+
 			isRecorded[threadEmail.ID] = true
 
 			for _, header := range threadMsg.Payload.Headers {
@@ -155,13 +168,32 @@ func (server *Server) getEmails(ctx *gin.Context) {
 		emails = append(emails, email)
 	}
 
-	response := emailResponse{
+	// send to ML
+	response := emailReqML{
 		Emails: emails,
 	}
+
+	// send to FE
+	var res emailResponse
+	for _, mail := range emails {
+		res.Emails = append(res.Emails, conversationData{
+			ID       : mail.ID,
+			Subject : mail.Subject,
+			From     : mail.From,
+			Date     : mail.Date,
+			ThreadID : mail.ThreadID,
+			Content  : mail.Content,
+			Summary  : "",
+			Products : nil,
+			Priority : "",
+			Mood     : "",
+		})
+	}
+
 	if r.NextPageToken != "" {
 		response.NextPageToken = r.NextPageToken
 	}
-	ctx.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusOK, res)
 }
 
 func getMessageContent(msg *gmail.Message) string {
