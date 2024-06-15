@@ -25,36 +25,6 @@ export enum Mood {
   NEUTRAL = "neutral",
 }
 
-export const mockHistories: History[] = [
-  {
-    id: "history-1",
-    summary: "Hello there!",
-    date: "2023-06-14T12:00:00Z",
-    from: "John Doe",
-    products: ["product-1", "product-2", "product-3"],
-    priority: Priority.HIGH,
-    mood: Mood.ANGRY
-  },
-  {
-    id: "history-2",
-    summary: "How are you?",
-    date: "2023-06-14T12:05:00Z",
-    from: "John Doe",
-    products: ["product-1"],
-    priority: Priority.MEDIUM,
-    mood: Mood.HAPPY
-  },
-  {
-    id: "history-3",
-    summary: "Hi?",
-    date: "2023-06-14T12:05:00Z",
-    from: "John Doe",
-    products: ["product-2"],
-    priority: Priority.MEDIUM,
-    mood: Mood.HAPPY
-  },
-];
-
 export const mockChats: Chat[] = [
   {
     content: "Hello there!",

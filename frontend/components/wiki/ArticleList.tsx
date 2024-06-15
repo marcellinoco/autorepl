@@ -15,8 +15,8 @@ const ArticleList: FC<ArticleListProps> = ({ articles, onEdit, onCreate }) => {
     if (searchValue.trim().length) {
       const sv = searchValue.toLowerCase();
       const filtered = articles.filter((article) => 
-        article.title.toLowerCase().includes(sv) || 
-        article.content.toLowerCase().includes(sv)
+        article?.title.toLowerCase().includes(sv) || 
+        article?.content?.toLowerCase().includes(sv)
       );
       setFilteredArticles(filtered);
     } else {
