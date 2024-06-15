@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,8 @@ import (
 const (
 	authorizationHeaderKey    = "authorization"
 	authorizationHeaderBearer = "Bearer"
-	authorizationPayloadKey   = "autorizationPayload"
+	authorizationPayloadKey   = "authorizationPayload"
+	oauthToken                = "oauthToken"
 )
 
 func authMiddleware() gin.HandlerFunc {
@@ -49,37 +51,59 @@ func authMiddleware() gin.HandlerFunc {
 		}
 
 		ctx.Set(authorizationPayloadKey, tokenInfo)
+		ctx.Set(oauthToken, accessToken)
+
+		fmt.Println("Token Info:", tokenInfo)
+		fmt.Println("OAuth Token:", accessToken)
 		ctx.Next()
 	}
 }
 
-
 type GoogleTokenInfo struct {
 	Aud           string `json:"aud"`
-	UserId        string `json:"user_id"`
-	ExpiresIn     int    `json:"expires_in"`
+	UserId        string `json:"sub"`
+	ExpiresIn     string `json:"expires_in"` // Changed to string to handle the JSON response
 	Email         string `json:"email"`
-	EmailVerified bool   `json:"email_verified"`
+	EmailVerified string `json:"email_verified"` // Changed to string to handle the JSON response
 }
 
 func verifyGoogleToken(token string) (*GoogleTokenInfo, error) {
-	resp, err := http.Get(fmt.Sprintf("https://oauth2.googleapis.com/tokeninfo?id_token=%s", token))
+	resp, err := http.Get(fmt.Sprintf("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=%s", token))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
+	fmt.Println("Response Status:", resp.StatusCode)
+	fmt.Println("Token:", token)
+
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("token validation failed")
+		var errorResponse map[string]interface{}
+		json.NewDecoder(resp.Body).Decode(&errorResponse)
+		return nil, fmt.Errorf("token validation failed: %v", errorResponse)
 	}
 
 	var tokenInfo GoogleTokenInfo
 	if err := json.NewDecoder(resp.Body).Decode(&tokenInfo); err != nil {
+		fmt.Println("token ga bisa di decode")
 		return nil, err
 	}
 
-	if tokenInfo.ExpiresIn <= 0 {
+	fmt.Println("token info oke")
+
+	// Convert expires_in to an integer
+	expiresIn, err := strconv.Atoi(tokenInfo.ExpiresIn)
+	if err != nil {
+		return nil, errors.New("invalid expires_in value")
+	}
+	if expiresIn <= 0 {
 		return nil, errors.New("token has expired")
+	}
+
+	// Convert email_verified to a boolean
+	emailVerified, err := strconv.ParseBool(tokenInfo.EmailVerified)
+	if err != nil || !emailVerified {
+		return nil, errors.New("email not verified")
 	}
 
 	return &tokenInfo, nil

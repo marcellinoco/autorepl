@@ -13,9 +13,9 @@ import (
 )
 
 type Server struct {
-	config     util.Config
-	store      db.Store
-	router     *gin.Engine
+	config util.Config
+	store  db.Store
+	router *gin.Engine
 }
 
 type ErrorResponse struct {
@@ -36,7 +36,7 @@ func (server *Server) Start(address string) error {
 func (server *Server) setupRouter() {
 	router := gin.Default()
 	authenticatedRouter := router.Group("/").Use(authMiddleware())
-	
+
 	// configure swagger docs
 	docs.SwaggerInfo.BasePath = "/api"
 	docs.SwaggerInfo.Host = server.config.BackendSwaggerHost
@@ -53,20 +53,30 @@ func (server *Server) setupRouter() {
 	authenticatedRouter.GET("/api/users", server.getUserData)
 	authenticatedRouter.PATCH("/api/users", server.updateUser)
 
+	authenticatedRouter.POST("/api/emails", server.getEmails)
+
 	server.router = router
 }
 
-func getUserPayload(ctx *gin.Context) (*GoogleTokenInfo, error) {
-	payload, exists := ctx.Get(authorizationPayloadKey)
-	if !exists {
-		return nil, fmt.Errorf("payload is missing")
+func getUserPayload(ctx *gin.Context) (*GoogleTokenInfo, string, error) {
+	payload, payloadExist := ctx.Get(authorizationPayloadKey)
+	token, tokenExist := ctx.Get(oauthToken)
+	if !payloadExist {
+		return nil, "", fmt.Errorf("payload is missing")
 	}
-	userPayload, ok := payload.(*GoogleTokenInfo)
-	if !ok {
-		return nil, fmt.Errorf("payload structure is not corrent")
+	if !tokenExist {
+		return nil, "", fmt.Errorf("token is missing")
+	}
+	userPayload, userPayloadOk := payload.(*GoogleTokenInfo)
+	if !userPayloadOk {
+		return nil, "", fmt.Errorf("payload structure is not correct")
+	}
+	tokenPayload, tokenPayloadOk := token.(string) // Directly assert as string
+	if !tokenPayloadOk {
+		return nil, "", fmt.Errorf("token structure is not correct")
 	}
 
-	return userPayload, nil
+	return userPayload, tokenPayload, nil
 }
 
 func errorResponse(err error) gin.H {

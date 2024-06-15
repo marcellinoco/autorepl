@@ -49,6 +49,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/emails": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Fetch emails using Gmail API with provided OAuth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emails"
+                ],
+                "summary": "Get Emails",
+                "parameters": [
+                    {
+                        "description": "OAuth token",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.emailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of emails",
+                        "schema": {
+                            "$ref": "#/definitions/api.emailResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -139,6 +178,57 @@ const docTemplate = `{
                 }
             }
         },
+        "api.emailData": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "from": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "thread": {
+                    "$ref": "#/definitions/api.threadDetail"
+                },
+                "threadId": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.emailRequest": {
+            "type": "object",
+            "required": [
+                "maxResults"
+            ],
+            "properties": {
+                "maxResults": {
+                    "type": "integer"
+                },
+                "pageToken": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.emailResponse": {
+            "type": "object",
+            "properties": {
+                "emails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/api.emailData"
+                    }
+                },
+                "nextPageToken": {
+                    "type": "string"
+                }
+            }
+        },
         "api.googleRequest": {
             "type": "object",
             "required": [
@@ -161,6 +251,23 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/api.UserResponse"
+                }
+            }
+        },
+        "api.threadDetail": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/api.emailData"
+                    }
+                },
+                "snippet": {
+                    "type": "string"
                 }
             }
         },

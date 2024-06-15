@@ -39,7 +39,7 @@ func ReturnUserResponse(user *db.Users) *UserResponse {
 // @Security BearerAuth
 // @Router /users [get]
 func (server *Server) getUserData(ctx *gin.Context) {
-	payload, err := getUserPayload(ctx)
+	payload, _, err := getUserPayload(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -80,7 +80,7 @@ type updateUserResponse struct {
 // @Security BearerAuth
 // @Router /users [patch]
 func (server *Server) updateUser(ctx *gin.Context) {
-	payload, err := getUserPayload(ctx)
+	payload, _, err := getUserPayload(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

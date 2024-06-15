@@ -15,6 +15,39 @@ definitions:
       updatedAt:
         type: string
     type: object
+  api.emailData:
+    properties:
+      date:
+        type: string
+      from:
+        type: string
+      id:
+        type: string
+      subject:
+        type: string
+      thread:
+        $ref: '#/definitions/api.threadDetail'
+      threadId:
+        type: string
+    type: object
+  api.emailRequest:
+    properties:
+      maxResults:
+        type: integer
+      pageToken:
+        type: string
+    required:
+    - maxResults
+    type: object
+  api.emailResponse:
+    properties:
+      emails:
+        items:
+          $ref: '#/definitions/api.emailData'
+        type: array
+      nextPageToken:
+        type: string
+    type: object
   api.googleRequest:
     properties:
       token:
@@ -30,6 +63,17 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/api.UserResponse'
+    type: object
+  api.threadDetail:
+    properties:
+      id:
+        type: string
+      messages:
+        items:
+          $ref: '#/definitions/api.emailData'
+        type: array
+      snippet:
+        type: string
     type: object
   api.updateUserRequest:
     properties:
@@ -74,6 +118,30 @@ paths:
       summary: Google Auth
       tags:
       - auth
+  /emails:
+    post:
+      consumes:
+      - application/json
+      description: Fetch emails using Gmail API with provided OAuth token
+      parameters:
+      - description: OAuth token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.emailRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of emails
+          schema:
+            $ref: '#/definitions/api.emailResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Emails
+      tags:
+      - emails
   /users:
     get:
       consumes:
