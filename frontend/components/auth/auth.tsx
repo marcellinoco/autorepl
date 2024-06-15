@@ -3,7 +3,6 @@
 import { FC } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import SignIn from "./sign-in";
-import SignUp from "./sign-up";
 
 const Auth: FC = () => {
   return (
