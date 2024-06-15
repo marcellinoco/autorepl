@@ -14,22 +14,22 @@ const initialArticles: ArticleSection[] = [
     id: "1",
     createdAt: new Date(),
     title: "Tokopedia Help Center",
-    categories: ["Help", "Tokopedia"],
-    content: "This is the content of the Tokopedia Help Center article.",
+    categories: ["Help", "Electronic"],
+    content: "Help with lost iPhone",
   },
   {
     id: "2",
     createdAt: new Date(),
     title: "Tokopedia Help",
-    categories: ["Help"],
-    content: "This is the content of test test Help Center article.",
+    categories: ["Help", "Account"],
+    content: "Account got blocked by Tokopedia team",
   },
   {
     id: "3",
     createdAt: new Date(),
     title: "Tokopediu",
-    categories: ["boomer", "wow"],
-    content: " is the  of test test Help  article.",
+    categories: ["Order", "Shoes"],
+    content: "Shoes is gone on the way to buyer.",
   },
 ];
 
