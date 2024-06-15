@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useRouter } from "next/navigation";
+import { ChatsHistoryDropdownMenuRadioGroup } from './chats-history-category';
 
 interface ChatsHistoryListProps {
   histories: History[] | null;
@@ -112,6 +113,9 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
               />
             </div>
           </form>
+          <div className="p-4 pt-0">
+            <ChatsHistoryDropdownMenuRadioGroup /> 
+          </div>
         </div>
       <div
         className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 m-0"
