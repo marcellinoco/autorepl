@@ -119,10 +119,12 @@ const ArticleEditor: FC<ArticleEditorProps> = ({
           rows={20}
       />
         <div className="flex justify-end gap-4">
-          <Button onClick={onCancel}>
-            Cancel
+          <Button onClick={onCancel} className="bg-gray-100 hover:bg-gray-50">
+            <p className="text-black">Cancel</p>
           </Button>
-          <Button onClick={handleSubmit} className="bg-custom-secondary hover:bg-custom-primary">Save</Button>
+          <Button onClick={handleSubmit} className="bg-gray-900 hover:bg-gray-700">
+            Save
+          </Button>
         </div>
       </div>
     </div>
