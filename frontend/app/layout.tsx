@@ -31,7 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning={true}
       >
         <GoogleOAuthProvider>
-          <div className="overflow-hidden max-h-screen flex rounded-lg border bg-background shadow-lg">
+          <div className="overflow-hidden max-h-screen flex border bg-background shadow-lg">
             <Sidebar />
             {children}
           </div>
