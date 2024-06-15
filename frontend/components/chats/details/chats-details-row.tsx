@@ -4,48 +4,88 @@ import { formatIsoDate } from "@/utils/formatIsoDate";
 import { getUserFallbackHandler } from "@/utils/getUserFallback";
 import { FC } from "react";
 
-interface ChatsDetailsRowProps {
-  chat: Chat;
-  activeUser: User | null;
+
+interface EmailResponse {
+  id: string;
+  subject: string;
+  from: string;
+  date: string;
+  threadId: string;
+  content: string;
+  thread: EmailThread;
 }
 
-const ChatsDetailsRow: FC<ChatsDetailsRowProps> = ({ activeUser, chat }) => {
-  const isMyFriend = () => {
-    return activeUser?.uid === chat.sender_uid;
-  };
-  return (
-    <div
-      className={`w-full flex items-start pt-4 ${
-        isMyFriend() ? "justify-start" : "justify-end"
-      }`}
-    >
-      <div
-        className={`max-w-[95%] flex gap-2 px-4 ${
-          !isMyFriend() && "flex-row-reverse"
-        }`}
-      >
-        {isMyFriend() && (
-          <Avatar>
-            <AvatarImage src={activeUser?.avatar} />
-            <AvatarFallback>
-              {getUserFallbackHandler(activeUser?.name)}
-            </AvatarFallback>
-          </Avatar>
-        )}
-        <div
-          className={`px-4 py-2 rounded-lg ${
-            isMyFriend() ? "bg-custom-primary text-[#FFF]" : "bg-[#DDD]"
-          }`}
-        >
-          {chat.content}
+interface EmailThread {
+  id: string;
+  snippet: string;
+  messages: EmailMessage[] | null;
+}
+
+interface EmailMessage {
+  id: string;
+  subject: string;
+  from: string;
+  date: string;
+  threadId: string;
+  content: string;
+  thread: EmailThread;
+}
+
+interface EmailResponse {
+  id: string;
+  subject: string;
+  from: string;
+  date: string;
+  threadId: string;
+  content: string;
+  thread: EmailThread;
+}
+
+
+interface ChatsDetailsRowProps {
+  chat: EmailResponse;
+}
+
+const formatEmailContent = (content: string) => {
+  return content.split('\r\n').map((line, index) => {
+    if (line.startsWith('>>')) {
+      return (
+        <div key={index} style={{ paddingLeft: '20px', borderLeft: '3px solid #ccc', marginLeft: '10px' }}>
+          {line}
         </div>
-        <div className="text-xs flex items-end">
-          {formatIsoDate(chat.created_at)}
+      );
+    } else if (line.startsWith('>')) {
+      return (
+        <div key={index} style={{ paddingLeft: '10px', borderLeft: '2px solid #ccc', marginLeft: '5px' }}>
+          {line}
+        </div>
+      );
+    } else {
+      return (
+        <div key={index}>
+          {line}
+          <br />
+        </div>
+      );
+    }
+  });
+};
+
+const ChatsDetailsRow: FC<ChatsDetailsRowProps> = ({ chat }) => {
+  return (
+    <div className="w-full flex flex-col pt-4">
+      <div className="max-w-[95%] px-4">
+        <div className="flex flex-row justify-between items-center">
+          <div className="font-bold">{chat.from}</div>
+          <div className="text-xs">{new Date(chat.date).toLocaleString()}</div>
+        </div>
+        <div className="bg-[#DDD] px-4 py-2 rounded-lg mt-2">
+          {formatEmailContent(chat.content)}
         </div>
       </div>
     </div>
   );
 };
 
-ChatsDetailsRow.displayName = "ChatsDetailsRow";
-export default ChatsDetailsRow;
+ChatsDetailsRow.displayName = 'ChatsDetailsRow';
+export default ChatsDetailsRow;;
