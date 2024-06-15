@@ -2,17 +2,14 @@
 
 import { useState } from "react";
 import ArticleList from "@/components/wiki/ArticleList";
-// import ArticleEditor from "@/components/wiki/ArticleEditor";
-import { ArticleSection } from "@/models/wiki";
 import dynamic from "next/dynamic";
-import { Separator } from "@/components/ui/separator";
+import { ArticleSection } from "@/models/wiki";
 
 const ArticleEditor = dynamic(() => import("@/components/wiki/ArticleEditor"), {
   ssr: false,
 });
 
 const initialArticles: ArticleSection[] = [
-  // Example data, replace with actual data fetching logic
   {
     id: "1",
     createdAt: new Date(),
@@ -37,9 +34,7 @@ const initialArticles: ArticleSection[] = [
 ];
 
 const WikiPage = () => {
-  const [editingArticle, setEditingArticle] = useState<ArticleSection | null>(
-    null
-  );
+  const [editingArticle, setEditingArticle] = useState<ArticleSection | null>(null);
   const [articles, setArticles] = useState<ArticleSection[]>(initialArticles);
 
   const handleEdit = (article: ArticleSection) => {
@@ -58,12 +53,8 @@ const WikiPage = () => {
 
   const handleSave = (article: ArticleSection) => {
     if (article.id) {
-      // Update existing article
-      setArticles((prev) =>
-        prev.map((a) => (a.id === article.id ? article : a))
-      );
+      setArticles((prev) => prev.map((a) => (a.id === article.id ? article : a)));
     } else {
-      // Create new article
       setArticles((prev) => [...prev, { ...article, id: `${Date.now()}` }]);
     }
     setEditingArticle(null);
@@ -74,8 +65,8 @@ const WikiPage = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row w-screen h-screen overflow-scroll">
-      <div className="w-full lg:w-1/3 border-r p-4">
+    <div className="flex flex-col lg:flex-row w-9/12 h-screen overflow-hidden">
+      <div className="w-full lg:w-1/3">
         <ArticleList
           articles={articles}
           onEdit={handleEdit}
