@@ -33,7 +33,7 @@ const Sidebar: FC = () => {
       }`}
     >
       <div className="h-[52px] flex items-center px-5 justify-between">
-        {!isCollapsed && <h1 className="text-xl font-bold">Autorepl.AI</h1>}
+        {!isCollapsed && <h1 className="text-3xl font-bold">Autorepl.AI</h1>}
         <button
           className="text-xl font-bold"
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -47,9 +47,9 @@ const Sidebar: FC = () => {
           isCollapsed ? "hidden" : ""
         }`}
       >
-        <div className="text-base font-bold line-clamp-1">{user?.name}</div>
-        <div className="text-xs overflow-truncate line-clamp-1">
-          {user?.email}
+        <div className="grid gap-1">
+          <h1 className="text-base md:text-xl font-bold line-clamp-1">{user?.name}</h1>
+          <h2 className="text-xs md:text-sm font-normal overflow-truncate line-clamp-1">{user?.email}</h2>
         </div>
       </div>
 

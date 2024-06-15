@@ -11,8 +11,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getSocial } from "@/app/social/action";
-import SocialListRow from "@/components/social/social-list/social-list-row";
 import { useRouter } from "next/navigation";
 
 interface ChatsHistoryListProps {
@@ -63,12 +61,11 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
 
   useEffect(() => {
     if (searchValue.trim().length) {
-      let newHistory = histories?.filter((history) => {
-        const sv = searchValue.toLowerCase();
-        return (
-          history.from.toLowerCase().includes(sv)
-        );
-      });
+      const sv = searchValue.toLowerCase();
+      const filteredHistories = histories?.filter((history) => (
+        history.summary.toLowerCase().includes(sv) ||
+        history.from.toLowerCase().includes(sv)
+      )) || [];
 
       setCurHistory(filteredHistories);
       setHasMore(filteredHistories.length > itemsPerPage);
@@ -121,7 +118,7 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
                         router.push(`/?uid=${friend?.uid}&name=${friend?.name}`);
                       }}
                     >
-                      <SocialListRow user={friend} />
+                      {friend.name}
                     </div>
                   ))}
                 </ScrollArea>
@@ -161,9 +158,7 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
                   <div
                     key={history?.id}
                     onClick={() => {
-                      onChatHistoryRowClicked(
-                        history?.from
-                      );
+                      onChatHistoryRowClicked(history?.id);
                     }}
                     ref={index === curHistory.length - 1 ? lastElementRef : null}
                   >

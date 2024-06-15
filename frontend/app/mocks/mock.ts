@@ -44,6 +44,15 @@ export const mockHistories: History[] = [
     priority: Priority.MEDIUM,
     mood: Mood.HAPPY
   },
+  {
+    id: "history-3",
+    summary: "Hi?",
+    date: "2023-06-14T12:05:00Z",
+    from: "John Doe",
+    products: ["product-2"],
+    priority: Priority.MEDIUM,
+    mood: Mood.HAPPY
+  },
 ];
 
 export const mockChats: Chat[] = [
