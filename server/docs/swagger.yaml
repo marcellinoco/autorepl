@@ -114,6 +114,20 @@ definitions:
       snippet:
         type: string
     type: object
+  api.threadRequest:
+    properties:
+      threadId:
+        type: string
+    required:
+    - threadId
+    type: object
+  api.threadResponse:
+    properties:
+      messages:
+        items:
+          $ref: '#/definitions/api.emailData'
+        type: array
+    type: object
   api.updateUserRequest:
     properties:
       avatar:
@@ -179,6 +193,31 @@ paths:
       security:
       - BearerAuth: []
       summary: Get Emails
+      tags:
+      - emails
+  /emails/threads:
+    post:
+      consumes:
+      - application/json
+      description: Fetch messages by thread ID using Gmail API with provided OAuth
+        token
+      parameters:
+      - description: Thread ID
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.threadRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of messages in the thread
+          schema:
+            $ref: '#/definitions/api.threadResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Messages by Thread ID
       tags:
       - emails
   /users:

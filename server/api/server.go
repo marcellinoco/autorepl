@@ -54,6 +54,7 @@ func (server *Server) setupRouter() {
 	authenticatedRouter.PATCH("/api/users", server.updateUser)
 
 	authenticatedRouter.POST("/api/emails", server.getEmails)
+	authenticatedRouter.POST("/api/emails/threads", server.getMessagesByThreadID)
 
 	server.router = router
 }

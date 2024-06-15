@@ -88,6 +88,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/emails/threads": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Fetch messages by thread ID using Gmail API with provided OAuth token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "emails"
+                ],
+                "summary": "Get Messages by Thread ID",
+                "parameters": [
+                    {
+                        "description": "Thread ID",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.threadRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of messages in the thread",
+                        "schema": {
+                            "$ref": "#/definitions/api.threadResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -327,6 +366,28 @@ const docTemplate = `{
                 },
                 "snippet": {
                     "type": "string"
+                }
+            }
+        },
+        "api.threadRequest": {
+            "type": "object",
+            "required": [
+                "threadId"
+            ],
+            "properties": {
+                "threadId": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.threadResponse": {
+            "type": "object",
+            "properties": {
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/api.emailData"
+                    }
                 }
             }
         },
