@@ -219,3 +219,9 @@ func getMessageContent(msg *gmail.Message) string {
 	}
 	return content
 }
+
+
+type threadRequest struct {
+    ThreadID string `json:"threadId" binding:"required"`
+}
+
