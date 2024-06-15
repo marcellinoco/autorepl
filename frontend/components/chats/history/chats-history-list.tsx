@@ -63,10 +63,12 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
   useEffect(() => {
     if (searchValue.trim().length) {
       const sv = searchValue.toLowerCase();
-      const filteredHistories = histories?.filter((history) => (
-        history.summary.toLowerCase().includes(sv) ||
-        history.from.toLowerCase().includes(sv)
-      )) || [];
+      const filteredHistories =
+        histories?.filter(
+          (history) =>
+            history.summary.toLowerCase().includes(sv) ||
+            history.from.toLowerCase().includes(sv)
+        ) || [];
 
       setCurHistory(filteredHistories);
       setHasMore(filteredHistories.length > itemsPerPage);
@@ -78,19 +80,22 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
     }
   }, [searchValue, histories]);
 
-  const lastElementRef = useCallback((node: HTMLElement | null) => {
-    if (loading) return;
+  const lastElementRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (loading) return;
 
-    if (observer.current) observer.current.disconnect();
+      if (observer.current) observer.current.disconnect();
 
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore) {
-        fetchMoreData();
-      }
-    });
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          fetchMoreData();
+        }
+      });
 
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore, fetchMoreData]);
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore, fetchMoreData]
+  );
 
   return (
     <div className="relative shrink basis-0 grow-[40] border-x">
@@ -101,16 +106,10 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
           </div>
         </div>
         <div className="shrink-0 bg-border h-[1px] w-full"></div>
-          <form className="p-4">
-            <div className="relative">
-              <div className="absolute top-1/2 left-3 -translate-y-1/2">
-                <MagnifyingGlassIcon />
-              </div>
-              <input
-                onChange={(e) => setSearchValue(e.currentTarget.value)}
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pl-8"
-                placeholder="Search"
-              />
+        <form className="p-4">
+          <div className="relative">
+            <div className="absolute top-1/2 left-3 -translate-y-1/2">
+              <MagnifyingGlassIcon />
             </div>
           </form>
           <div className="p-4 pt-0">
@@ -132,9 +131,11 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
                   <div
                     key={history?.id}
                     onClick={() => {
-                      onChatHistoryRowClicked(history?.id);
+                      onChatHistoryRowClicked(history?.threadId ?? "");
                     }}
-                    ref={index === curHistory.length - 1 ? lastElementRef : null}
+                    ref={
+                      index === curHistory.length - 1 ? lastElementRef : null
+                    }
                   >
                     <ChatsHistoryRow history={history} />
                   </div>

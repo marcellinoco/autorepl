@@ -2,7 +2,14 @@
 
 import { FC, useEffect, useState, Suspense } from "react";
 import ChatsHistoryList from "./history/chats-history-list";
-import { Chat, History, Mood, Priority, User } from "@/models/model";
+import {
+  Chat,
+  EmailMessage,
+  History,
+  Mood,
+  Priority,
+  User,
+} from "@/models/model";
 import { getChatsDetails } from "@/app/action";
 import ChatsDetailsList from "./details/chats.details-list";
 import WebSocketConnection from "./websocket-connection";
@@ -17,7 +24,7 @@ interface ChatsProps {
 const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
   const [curHistory, setCurHistory] = useState<History[] | null>(histories);
   const [activeUser, setActiveUser] = useState<User | null>(null);
-  const [chats, setChats] = useState<Chat[] | null>([]);
+  const [chats, setChats] = useState<EmailMessage[] | null>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const searchParams = useSearchParams();
   const uidActive = searchParams.get("uid");
@@ -45,12 +52,12 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
         chat?.sender_uid === currentUser?.uid ||
         chat?.receiver_uid === currentUser?.uid
       ) {
-        setChats((cChats) => {
-          if (!cChats) return [chat];
+        // setChats((cChats) => {
+        //   if (!cChats) return [chat];
 
-          const chatExists = cChats?.some((c) => c?.id === chat?.id);
-          return chatExists ? cChats : [chat, ...cChats];
-        });
+        //   const chatExists = cChats?.some((c) => c?.id === chat?.id);
+        //   return chatExists ? cChats : [chat, ...cChats];
+        // });
       }
       return currentUser;
     });
@@ -64,10 +71,9 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
     console.log("WebSocket connection established");
   };
 
-  const historyRowClickedHandler = async (uid: string) => {
-    const { chats, user } = await getChatsDetails(uid);
-    setActiveUser(user);
-    setChats(chats);
+  const historyRowClickedHandler = async (id: string) => {
+    const { messages } = await getChatsDetails(id);
+    setChats(messages);
   };
 
   const sendMessage = (data: any) => {

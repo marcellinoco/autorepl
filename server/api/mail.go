@@ -35,26 +35,21 @@ type threadDetail struct {
 }
 
 type emailData struct {
-	ID       string       `json:"id"`
-	Subject  string       `json:"subject"`
-	From     string       `json:"from"`
-	Date     string       `json:"date"`
-	ThreadID string       `json:"threadId"`
-	Content  string       `json:"content"`
-	Thread   threadDetail `json:"thread"`
-	Summary string `json:"summary"`
-	Products []string `json:"products"`
-	Priority string 	`json:"priority"`
-	Mood string `json:"mood"`
+	ID       string `json:"id"`
+	Subject  string `json:"subject"`
+	From     string `json:"from"`
+	Date     string `json:"date"`
+	ThreadID string `json:"threadId"`
+	Content  string `json:"content"`
 }
 
 type emailReqML struct {
-	Emails        []emailData `json:"emails"`
-	NextPageToken string      `json:"nextPageToken"`
+	Emails        []conversationData `json:"emails"`
+	NextPageToken string             `json:"nextPageToken"`
 }
 type emailResponse struct {
 	Emails        []conversationData `json:"emails"`
-	NextPageToken string      `json:"nextPageToken"`
+	NextPageToken string             `json:"nextPageToken"`
 }
 
 // @Summary Get Emails
@@ -106,7 +101,7 @@ func (server *Server) getEmails(ctx *gin.Context) {
 		return
 	}
 
-	var emails []emailData
+	var emails []conversationData
 	for _, m := range r.Messages {
 		msg, err := gmailService.Users.Messages.Get(user, m.Id).Do()
 		if err != nil {
@@ -114,7 +109,7 @@ func (server *Server) getEmails(ctx *gin.Context) {
 			return
 		}
 
-		var email emailData
+		var email conversationData
 		email.ID = msg.Id
 
 		if _, exists := isRecorded[email.ID]; exists {
@@ -181,16 +176,16 @@ func (server *Server) getEmails(ctx *gin.Context) {
 	var res emailResponse
 	for _, mail := range emails {
 		res.Emails = append(res.Emails, conversationData{
-			ID       : mail.ID,
-			Subject : mail.Subject,
-			From     : mail.From,
-			Date     : mail.Date,
-			ThreadID : mail.ThreadID,
-			Content  : mail.Content,
-			Summary  : "",
-			Products : nil,
-			Priority : "",
-			Mood     : "",
+			ID:       mail.ID,
+			Subject:  mail.Subject,
+			From:     mail.From,
+			Date:     mail.Date,
+			ThreadID: mail.ThreadID,
+			Content:  mail.Content,
+			Summary:  mail.Summary,
+			Products: nil,
+			Priority: mail.Priority,
+			Mood:     mail.Mood,
 		})
 	}
 
@@ -218,4 +213,84 @@ func getMessageContent(msg *gmail.Message) string {
 		}
 	}
 	return content
+}
+
+type threadRequest struct {
+	ThreadID string `json:"threadId" binding:"required"`
+}
+
+type threadResponse struct {
+	Messages []emailData `json:"messages"`
+}
+
+// @Summary Get Messages by Thread ID
+// @Description Fetch messages by thread ID using Gmail API with provided OAuth token
+// @Tags emails
+// @Accept json
+// @Produce json
+// @Param request body threadRequest true "Thread ID"
+// @Success 200 {object} threadResponse "List of messages in the thread"
+// @Security BearerAuth
+// @Router /emails/thread [post]
+func (server *Server) getMessagesByThreadID(ctx *gin.Context) {
+	_, token, err := getUserPayload(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return
+	}
+
+	var req threadRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	tokenSource := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
+	httpClient := oauth2.NewClient(ctx, tokenSource)
+	gmailService, err := gmail.New(httpClient)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	// Fetch messages by thread ID
+	thread, err := gmailService.Users.Threads.Get("me", req.ThreadID).Do()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	var messages []emailData
+	for _, msg := range thread.Messages {
+		email := extractEmailData(msg)
+		if email.ID != "" {
+			messages = append(messages, email)
+		}
+	}
+
+	response := threadResponse{
+		Messages: messages,
+	}
+	ctx.JSON(http.StatusOK, response)
+}
+
+// Helper function to extract email data
+func extractEmailData(msg *gmail.Message) emailData {
+	var email emailData
+	email.ID = msg.Id
+	email.ThreadID = msg.ThreadId
+	email.Content = getMessageContent(msg)
+
+	// Extract headers
+	for _, header := range msg.Payload.Headers {
+		switch header.Name {
+		case "Subject":
+			email.Subject = header.Value
+		case "From":
+			email.From = header.Value
+		case "Date":
+			email.Date = header.Value
+		}
+	}
+	return email
 }

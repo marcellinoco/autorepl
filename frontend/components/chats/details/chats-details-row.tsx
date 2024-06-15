@@ -1,46 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Chat, User } from "@/models/model";
-import { formatIsoDate } from "@/utils/formatIsoDate";
-import { getUserFallbackHandler } from "@/utils/getUserFallback";
+import { EmailResponse } from "@/models/model";
 import { FC } from "react";
-
-
-interface EmailResponse {
-  id: string;
-  subject: string;
-  from: string;
-  date: string;
-  threadId: string;
-  content: string;
-  thread: EmailThread;
-}
-
-interface EmailThread {
-  id: string;
-  snippet: string;
-  messages: EmailMessage[] | null;
-}
-
-interface EmailMessage {
-  id: string;
-  subject: string;
-  from: string;
-  date: string;
-  threadId: string;
-  content: string;
-  thread: EmailThread;
-}
-
-interface EmailResponse {
-  id: string;
-  subject: string;
-  from: string;
-  date: string;
-  threadId: string;
-  content: string;
-  thread: EmailThread;
-}
-
 
 interface ChatsDetailsRowProps {
   chat: EmailResponse;

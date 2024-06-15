@@ -1,37 +1,11 @@
-import { Chat, User } from "@/models/model";
+import { Chat, EmailResponse, User } from "@/models/model";
 import { FC, useState } from "react";
 import ChatsDetailsRow from "./chats-details-row";
 import Image from "next/image";
 import useAuthStore from "@/store/useAuthStore";
 
-interface EmailThread {
-  id: string;
-  snippet: string;
-  messages: EmailMessage[] | null;
-}
-
-interface EmailMessage {
-  id: string;
-  subject: string;
-  from: string;
-  date: string;
-  threadId: string;
-  content: string;
-  thread: EmailThread;
-}
-
-interface EmailResponse {
-  id: string;
-  subject: string;
-  from: string;
-  date: string;
-  threadId: string;
-  content: string;
-  thread: EmailThread;
-}
-
 interface ChatsDetailsListProps {
-  chats: Chat[] | null;
+  chats: EmailResponse[] | null;
   activeUser: User | null;
   sendMessage: (data: any) => void;
 }
@@ -164,14 +138,13 @@ const exampleResponse: EmailResponse = {
 };
 
 const ChatsDetailsList: FC<ChatsDetailsListProps> = ({
-  chat,
+  chats,
   activeUser,
   sendMessage,
 }) => {
   const [value, setValue] = useState("");
   const { user } = useAuthStore();
   const email = user?.email;
-  const chats = exampleResponse;
 
   const onSubmitHandler = () => {
     if (value.trim().length) {
@@ -187,7 +160,7 @@ const ChatsDetailsList: FC<ChatsDetailsListProps> = ({
   };
 
   const chatDetail = () => {
-    const sortedMessages = chats?.thread?.messages?.slice().sort((a, b) => {
+    const sortedMessages = chats?.slice().sort((a, b) => {
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
 
@@ -214,7 +187,7 @@ const ChatsDetailsList: FC<ChatsDetailsListProps> = ({
     </div>
   );
 
-  const senderEmail = chats.thread.messages?.find(
+  const senderEmail = chats?.find(
     (message) => message.from !== email
   )?.from;
 
@@ -225,7 +198,7 @@ const ChatsDetailsList: FC<ChatsDetailsListProps> = ({
           {senderEmail ?? "Conversation"}
         </div>
         <div className="shrink-0 bg-border h-[1px] w-full my-auto" />
-        {chats.thread.messages ? chatDetail() : emptyState()}
+        {chats ? chatDetail() : emptyState()}
       </div>
       <div className="p-4 bg-[#FFF] sticky bottom-0 w-full my-auto">
         <form>

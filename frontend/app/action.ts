@@ -1,7 +1,7 @@
 // action.ts
 "use server";
 
-import { Chat, History, User } from "@/models/model";
+import { Chat, EmailMessage, History, User } from "@/models/model";
 import { cookies } from "next/headers";
 
 import { getChatsDetails as mockGetChatsDetails } from "./mocks/mockFunction";
@@ -37,23 +37,29 @@ export async function getHistory(): Promise<{
   }
 }
 
-export async function getChatsDetails(uid: string): Promise<{
-  chats: Chat[];
-  user: User;
+export async function getChatsDetails(threadId: string): Promise<{
+  messages: EmailMessage[];
 }> {
   "use server";
   try {
-    // Uncomment the following lines when not testing
-    // const accessToken = cookies().get("access_token")?.value;
-    // const { data } = await serverAxios.get<{
-    //   chats: Chat[];
-    //   user: User;
-    // }>(`/api/chats/${uid}`, {
-    //   headers: { Authorization: `Bearer ${accessToken}` },
-    // });
+    const accessToken = cookies().get("accessToken")?.value;
+    const { data } = await serverAxios.post<{
+      messages: EmailMessage[];
+    }>(
+      "/api/emails/threads",
+      {
+        threadId: threadId,
+      },
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
 
-    // Mocked response for testing
-    const data = await mockGetChatsDetails(uid);
+    let e = data.messages.map((message) => {
+      return { ...message, from: message.from.split(" <")[0] };
+    });
+    data.messages = e;
+    return data;
 
     return data;
   } catch (error) {
