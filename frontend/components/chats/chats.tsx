@@ -32,14 +32,14 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
     setCurHistory((cHistory) => {
       let newHistory =
         cHistory?.filter((hs) => {
-          if (
-            (chat?.sender_uid === hs?.sender_uid &&
-              chat?.receiver_uid === hs?.receiver_uid) ||
-            (chat?.receiver_uid === hs?.sender_uid &&
-              chat?.sender_uid === hs?.receiver_uid)
-          ) {
-            return false;
-          }
+          // if (
+          //   (chat?.sender_uid === hs?.sender_uid &&
+          //     chat?.receiver_uid === hs?.receiver_uid) ||
+          //   (chat?.receiver_uid === hs?.sender_uid &&
+          //     chat?.sender_uid === hs?.receiver_uid)
+          // ) {
+          //   return false;
+          // }
           return true;
         }) ?? [];
 
@@ -92,11 +92,11 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
     setCurHistory((cHistory) => {
       const newHs: History = {
         id: new Date().toISOString(),
-        latest_content: "",
-        latest_created_at: new Date().toISOString(),
+        summary: "",
+        date: new Date().toISOString(),
         receiver_name: nameActive,
         receiver_uid: uidActive,
-        sender_name: user?.name,
+        from: user?.name,
         sender_uid: user?.id,
       } as History;
 
@@ -108,7 +108,7 @@ const ChatsComponent: FC<ChatsProps> = ({ histories }) => {
 
       let newHistory =
         cHistory?.filter((hs, id) => {
-          if (hs.sender_uid === uidActive || hs.receiver_uid === uidActive) {
+          if (cHistory) {
             idx = id;
             return false;
           }

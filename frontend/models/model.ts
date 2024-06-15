@@ -9,12 +9,20 @@ export interface User {
 
 export interface History {
   id: string;
-  latest_content: string;
-  latest_created_at: string;
-  receiver_name: string;
-  receiver_uid: string;
-  sender_name: string;
-  sender_uid: string;
+  summary: string;
+  date: string;
+  from: string;
+  products?: string[];
+  priority?: Priority;
+  mood?: Mood;
+}
+
+export interface Mail {
+  id: string;
+  from: string;
+  date: Date;
+  subject: string;
+  content: string;
 }
 
 export interface Chat {
@@ -40,12 +48,21 @@ export interface MailPreview {
   summary: string,
   from: string,
   date: Date,
+  product: string[],
+  priority: string,
+  mood: string,
 }
 
-export interface Mail {
-  id: string,
-  from: string,
-  date: Date,
-  subject: string,
-  content: string,
+export enum Priority {
+  LOW = "low",
+  MEDIUM = "medium",
+  HIGH = "high",
+  NONE = "none",
+}
+
+export enum Mood {
+  HAPPY = "happy",
+  SAD = "sad",
+  ANGRY = "angry",
+  NEUTRAL = "neutral",
 }

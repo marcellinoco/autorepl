@@ -63,12 +63,12 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
 
   useEffect(() => {
     if (searchValue.trim().length) {
-      const sv = searchValue.toLowerCase();
-      const filteredHistories = histories?.filter((history) => (
-        history.latest_content.toLowerCase().includes(sv) ||
-        history.sender_name.toLowerCase().includes(sv) ||
-        history.receiver_name.toLowerCase().includes(sv)
-      )) || [];
+      let newHistory = histories?.filter((history) => {
+        const sv = searchValue.toLowerCase();
+        return (
+          history.from.toLowerCase().includes(sv)
+        );
+      });
 
       setCurHistory(filteredHistories);
       setHasMore(filteredHistories.length > itemsPerPage);
@@ -162,9 +162,7 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
                     key={history?.id}
                     onClick={() => {
                       onChatHistoryRowClicked(
-                        user?.id !== history?.sender_uid
-                          ? history?.sender_uid
-                          : history?.receiver_uid
+                        history?.from
                       );
                     }}
                     ref={index === curHistory.length - 1 ? lastElementRef : null}
