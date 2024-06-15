@@ -111,11 +111,17 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
             <div className="absolute top-1/2 left-3 -translate-y-1/2">
               <MagnifyingGlassIcon />
             </div>
-          </form>
-          <div className="p-4 pt-0">
-            <ChatsHistoryDropdownMenuRadioGroup /> 
+            <input
+              onChange={(e) => setSearchValue(e.currentTarget.value)}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pl-8"
+              placeholder="Search"
+            />
           </div>
+        </form>
+        <div className="p-4 pt-0">
+          <ChatsHistoryDropdownMenuRadioGroup /> 
         </div>
+      </div>
       <div
         className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 m-0"
         style={{ animationDuration: "0s" }}
@@ -150,5 +156,5 @@ const ChatsHistoryList: FC<ChatsHistoryListProps> = ({
   );
 };
 
-ChatsHistoryList.displayName = "Chats History List";
+ChatsHistoryList.displayName = "ChatsHistoryList";
 export default ChatsHistoryList;

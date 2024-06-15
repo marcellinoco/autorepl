@@ -14,7 +14,7 @@ import {
 export function ChatsHistoryDropdownMenuRadioGroup() {
     const [selectedStatus, setSelectedStatus] = React.useState("")
 
-    const handleStatusClick = (status) => {
+    const handleStatusClick = (status: string) => {
         setSelectedStatus(status)
     }
 
