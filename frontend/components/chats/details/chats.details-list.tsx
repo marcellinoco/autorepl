@@ -59,7 +59,7 @@ const ChatsDetailsList: FC<ChatsDetailsListProps> = ({
         <div className="flex gap-2 flex-start items-center p-4 sticky top-0 left-0 w-full h-[52px] text-lg font-semibold bg-[#FFF] z-2">
           {activeUser?.name ?? "Chat Details"}
         </div>
-        <div className="shrink-0 bg-border h-[1px] w-full" />
+        <div className="shrink-0 bg-border h-[1px] w-full my-auto" />
           {activeUser ? chatDetail() : emptyState()}
         </div>
         <div className="p-4 bg-[#FFF] sticky bottom-0 w-full my-auto">
