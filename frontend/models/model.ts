@@ -69,3 +69,30 @@ export enum Mood {
   ANGRY = "angry",
   NEUTRAL = "neutral",
 }
+
+
+export interface EmailThread {
+  id: string;
+  snippet: string;
+  messages: EmailMessage[] | null;
+}
+
+export interface EmailMessage {
+  id: string;
+  subject: string;
+  from: string;
+  date: string;
+  threadId: string;
+  content: string;
+  thread: EmailThread;
+}
+
+export interface EmailResponse {
+  id: string;
+  subject: string;
+  from: string;
+  date: string;
+  threadId: string;
+  content: string;
+  thread: EmailThread;
+}
